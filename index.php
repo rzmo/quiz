@@ -14,16 +14,13 @@
 
             <p id="questionlabel" class="label">QuestionLabel</p>
 
-            <input id="answercheckbox" type="checkbox">
-            <form id="answerdropdown" action="#">
-                <select name="Choose Your Answer">
-                    <option value="ans1">Answer1</option>
-                    <option value="ans2">Answer2</option>
-                    <option value="ans3">Answer3</option>
-                    <option value="ans4">Answer4</option>
-                </select>
-            </form>
-            <input id="answertext" type="text">
+            <div id="answerSection">
+                <input id="answertext" type="text" style="display:none;">
+                <form id="answerdropdown" action="#" style="display:none;">
+                    <select id="dropdownOptions" name="Choose Your Answer"></select>
+                </form>
+                <input id="answercheckbox" type="checkbox" style="display:none;">
+            </div>
 
             <button id="nextButton">Next</button>
 
@@ -41,58 +38,131 @@
     <script>
 
     questions = {
-        "1":["What is 1+1?","2","text",[]],
-        "2":["Third letter of alphabet?","c","dropdown",["a","b","c"]],
-        "3":["What is 1+1?","2","text",[]],
-        "4":["What is 1+1?","2","text",[]],
-        "5":["What is 1+1?","2","text",[]],
-        "6":["What is 1+1?","2","text",[]],
-        "7":["What is 1+1?","2","text",[]],
-        "8":["What is 1+1?","2","text",[]],
-        "9":["What is 1+1?","2","text",[]],
-        "10":["What is 1+1?","2","text",[]]
+        "1":["What is 1+1?","text",[]],
+        "2":["Third letter of alphabet?","dropdown",["a","b","c"]],
+        "3":["Is 25 a multiple of 5?","checkbox",[]],
+        "4":["What is 1+1?","text",[]],
+        "5":["What is 1+1?","text",[]],
+        "6":["What is 1+1?","text",[]],
+        "7":["What is 1+1?","text",[]],
+        "8":["What is 1+1?","text",[]],
+        "9":["What is 1+1?","text",[]],
+        "10":["What is 1+1?","text",[]]
     }
 
-    window.addEventListener('DOMContentLoaded', function() {
+    answerdict = {
+        "1":"2",
+        "2":"c",
+        "3":true,
+        "4":"2",
+        "5":"2",
+        "6":"2",
+        "7":"2",
+        "8":"2",
+        "9":"2",
+        "10":"2"
+    }
 
-    // Initialise selection of question & answer labels
-    let questionLabel = document.getElementById("questionlabel")
-    let answerLabel = document.getElementById("answerlabel")
+    let currentQuestionIndex = 1;
+    let answers = [];
 
-    questionLabel.innerHTML = "Q Init"
-    answerLabel.innerHTML = ""
+    let questionLabel = document.getElementById('questionlabel');
+    let answerText = document.getElementById('answertext');
+    let answerDropdown = document.getElementById('answerdropdown');
+    let dropdownOptions = document.getElementById('dropdownOptions');
+    let answerCheckbox = document.getElementById('answercheckbox');
+    let nextButton = document.getElementById('nextButton');
+    let userNameSection = document.getElementById('userNameSection');
+    let userNameInput = document.getElementById('userName');
+    let submitNameButton = document.getElementById('submitName');
 
-    // Hide by default all input options to allow for dynamic input type based on question
-    // (i.e. allowing some questions to be multiple choice, others text input etc, others checkbox)
-    let checkboxInput = document.getElementById("answercheckbox");
-    let dropdownInput = document.getElementById("answerdropdown");
-    let textInput = document.getElementById("answertext");
+    function displayQuestion() {
+        if (currentQuestionIndex <= Object.keys(questions).length) {
+            let question = questions[currentQuestionIndex];
+            questionLabel.innerHTML = question[0];
+        
+            answerText.style.display = 'none';
+            answerDropdown.style.display = 'none';
+            answerCheckbox.style.display = 'none';
 
-
-
-    function toggleInput(name) {
-        let choice = null
-        if (name == "checkbox") {choice = checkboxInput}        
-        if (name == "dropdown") {choice = dropdownInput}
-        if (name == "text") {choice = textInput}
-        if (choice && name) {
-            if (choice.style.display == "none") {
-                choice.style.display = "block";
-                console.log("made" + choice + " - block")
-            } else {
-                choice.style.display = "none";
-                console.log("made" + choice + " - none")
+            if (question[1] === 'text') {
+                answerText.style.display = 'inline-block';
+            } else if (question[1] === 'dropdown') {
+                answerDropdown.style.display = 'inline-block';
+                dropdownOptions.innerHTML = '';
+                question[2].forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    dropdownOptions.appendChild(optionElement);
+                });
+            } else if (question[1] === 'checkbox') {
+                answerCheckbox.style.display = 'inline-block';
             }
         } else {
-            return null;
+            questionLabel.innerHTML = 'All questions answered. Please enter your name.';
+            document.getElementById('answerSection').style.display = 'none';
+            userNameSection.style.display = 'inline-block';
+            nextButton.style.display = 'none';
         }
     }
 
-    toggleInput("checkbox")
-    toggleInput("dropdown")
-    toggleInput("text")
+    nextButton.addEventListener('click', () => {
+        if (currentQuestionIndex <= Object.keys(questions).length) {
+            const question = questions[currentQuestionIndex];
+            let answer;
+
+            if (question[1] === 'text') {
+                answer = answerText.value;
+            } else if (question[1] === 'dropdown') {
+                answer = dropdownOptions.value;
+            } else if (question[1] === 'checkbox') {
+                answer = answerCheckbox.checked;
+            }
+
+            answers.push({
+                question: question[0],
+                answer: answer
+            });
+
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+    });
+
+    submitNameButton.addEventListener('click', () => {
+        const userName = userNameInput.value;
+        answers.push({
+            userName: userName
+        });
+
+        console.log(answers);
+
+        let person = answers[10].userName;
+        let score = 0;
+        for (let i = 1; i < Object.keys(answerdict).length+1; i++) {
+            console.log("( " + answers[i-1].answer + " || " + answerdict[i] + ") Verdict: " + (String(answers[i-1].answer) == String(answerdict[i])))
+            if (String(answers[i-1].answer) == String(answerdict[i])) {
+
+                score += 1;
+            }
+        }
+        console.log(person + " got a score of " + score)
+
+
+
+        alert('Thank you for completing the quiz!');
+        currentQuestionIndex = 1;
+        answers = [];
+        document.getElementById('answerSection').style.display = 'block';
+        userNameSection.style.display = 'none';
+        nextButton.style.display = 'inline-block';
+        displayQuestion();
+
 
     });
+
+    displayQuestion();
 
     </script>
 </body>
