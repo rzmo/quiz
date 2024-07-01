@@ -2,198 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>General Knowledge Quiz</title>
-    <link href="style.css" rel="stylesheet" />
+    <title>Knowledge Quiz</title>
+    <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
     
     <div class="maincontainer">
 
-        <h1>General Knowledge Quiz</h1>
-        <div class="subcontainer">
+        <h1 id="header">General Knowledge Quiz</h1>
+        
+        <?php
 
-            <p id="questionlabel" class="label">QuestionLabel</p>
+        $members = array(
+            "What is 1 + 1"=>["1","2","3","4"],
+            "What is the closest planet to the Earth?"=>["Pluto", "Mars", "Neptune", "The Sun"],
+            "How many continents are there?"=>["4", "5", "7", "9"],
+            "Who was the Prime Minister during WWII?"=>["Hillary Clinton", "Winston Churchill", "Percy Jackson", "Rishi Sunak"],
+            "What is the capital of Australia?"=>["Victoria", "Canberra", "Sydney", "Melbourne"],
+            "What does CPU stand for?"=>["Central Processing Unit", "Control Panel Unit", "It's waffle", "Core Processor Unit"],
+            "What is the largest internal organ in the human body?"=>["Lungs", "Heart", "Kidneys", "Liver"],
+            "What percentage of the Earth is covered by water?"=>["51%", "61%", "71%", "81%"],
+            "Who invented the World Wide Web?"=>["Tim Berners-Lee", "Stephen Hawking", "Alan Turing", "James D. Watson"],
+            "What is the main ingredient of gnocchi?"=>["Rice", "Potato", "Pasta", "Chocolate"]
+        );
 
-            <div id="answerSection">
-                <input id="answertext" type="text" style="display:none;">
-                <form id="answerdropdown" action="#" style="display:none;">
-                    <select id="dropdownOptions" name="Choose Your Answer"></select>
-                </form>
-                <input id="answercheckbox" type="checkbox" style="display:none;">
-            </div>
+        $count = 0;
+        foreach ($members as $q => $a) {
+            echo "<h2 class='question'>$q</h2>";
+            echo "<div class='flexcont' id='cont$count'>";
+            echo "<button class='flexbutton' onclick='chooseAns($count, 0, this)'>$a[0]</button>";
+            echo "<button class='flexbutton' onclick='chooseAns($count, 1, this)'>$a[1]</button>";
+            echo "<button class='flexbutton' onclick='chooseAns($count, 2, this)'>$a[2]</button>";
+            echo "<button class='flexbutton' onclick='chooseAns($count, 3, this)'>$a[3]</button>";
+            echo "</div>";
+            $count += 1;
+        }
 
-            <button id="nextButton">Next</button>
+        ?>
 
-            <div id="userNameSection" style="display:none;">
-                <label for="userName">Enter your name:</label>
-                <input id="userName" type="text">
-                <button id="submitName">Submit</button>
-            </div>
-
-        </div>
+        <h2 class='question'>Enter your name to save your results.</h2>
+        <form action="public/leaderboard.php" method="POST">
+                <input id="nameinput" type="text" name="name">
+                <input id="scoreinput" type="hidden" name="score" value="0"/>
+                <button id="submitbutton">Submit</button>
+        </form>
 
     </div>
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
 
-    questions = {
-        "1":["What is 1+1?","text",[]],
-        "2":["Third letter of alphabet?","dropdown",["a","b","c"]],
-        "3":["Is 25 a multiple of 5?","checkbox",[]],
-        "4":["What is 1+1?","text",[]],
-        "5":["What is 1+1?","text",[]],
-        "6":["What is 1+1?","text",[]],
-        "7":["What is 1+1?","text",[]],
-        "8":["What is 1+1?","text",[]],
-        "9":["What is 1+1?","text",[]],
-        "10":["What is 1+1?","text",[]]
-    }
-
-    answerdict = {
-        "1":"2",
-        "2":"c",
-        "3":true,
-        "4":"2",
-        "5":"2",
-        "6":"2",
-        "7":"2",
-        "8":"2",
-        "9":"2",
-        "10":"2"
-    }
-
-    let currentQuestionIndex = 1;
-    let answers = [];
-
-    let questionLabel = document.getElementById('questionlabel');
-    let answerText = document.getElementById('answertext');
-    let answerDropdown = document.getElementById('answerdropdown');
-    let dropdownOptions = document.getElementById('dropdownOptions');
-    let answerCheckbox = document.getElementById('answercheckbox');
-    let nextButton = document.getElementById('nextButton');
-    let userNameSection = document.getElementById('userNameSection');
-    let userNameInput = document.getElementById('userName');
-    let submitNameButton = document.getElementById('submitName');
-
-    function displayQuestion() {
-        if (currentQuestionIndex <= Object.keys(questions).length) {
-            let question = questions[currentQuestionIndex];
-            questionLabel.innerHTML = question[0];
-        
-            answerText.style.display = 'none';
-            answerDropdown.style.display = 'none';
-            answerCheckbox.style.display = 'none';
-
-            if (question[1] === 'text') {
-                answerText.style.display = 'inline-block';
-            } else if (question[1] === 'dropdown') {
-                answerDropdown.style.display = 'inline-block';
-                dropdownOptions.innerHTML = '';
-                question[2].forEach(option => {
-                    const optionElement = document.createElement('option');
-                    optionElement.value = option;
-                    optionElement.textContent = option;
-                    dropdownOptions.appendChild(optionElement);
-                });
-            } else if (question[1] === 'checkbox') {
-                answerCheckbox.style.display = 'inline-block';
-            }
-        } else {
-            questionLabel.innerHTML = 'All questions answered. Please enter your name.';
-            document.getElementById('answerSection').style.display = 'none';
-            userNameSection.style.display = 'inline-block';
-            nextButton.style.display = 'none';
+        let answerdict = {
+            "0": 1,
+            "1": 1,
+            "2": 2,
+            "3": 1,
+            "4": 1,
+            "5": 0,
+            "6": 3,
+            "7": 2,
+            "8": 0,
+            "9": 1
         }
-    }
 
-    nextButton.addEventListener('click', () => {
-        if (currentQuestionIndex <= Object.keys(questions).length) {
-            const question = questions[currentQuestionIndex];
-            let answer;
-
-            if (question[1] === 'text') {
-                answer = answerText.value;
-            } else if (question[1] === 'dropdown') {
-                answer = dropdownOptions.value;
-            } else if (question[1] === 'checkbox') {
-                answer = answerCheckbox.checked;
-            }
-
-            answers.push({
-                question: question[0],
-                answer: answer
-            });
-
-            currentQuestionIndex++;
-            displayQuestion();
-        }
-    });
-
-    submitNameButton.addEventListener('click', () => {
-        const userName = userNameInput.value;
-        answers.push({
-            userName: userName
-        });
-
-        console.log(answers);
-
-        let person = answers[10].userName;
         let score = 0;
-        for (let i = 1; i < Object.keys(answerdict).length+1; i++) {
-            console.log("( " + answers[i-1].answer + " || " + answerdict[i] + ") Verdict: " + (String(answers[i-1].answer) == String(answerdict[i])))
-            if (String(answers[i-1].answer) == String(answerdict[i])) {
 
+        function chooseAns(questionNum, buttonNum, clickedButton) {
+
+            let group = document.getElementById("cont"+questionNum);
+            let buttons = group.getElementsByClassName("flexbutton");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = "true";
+            }​;
+            if (answerdict[questionNum] == buttonNum) {
+                clickedbutton.style.backgroundColor = "green";
                 score += 1;
-            }
+            } else {
+                clickedbutton.style.backgroundColor = "red";
+            };
+
+            return "Clicked the " + buttonNum + " button for question " + questionNum;
+
         }
-        console.log(person + " got a score of " + score)
-
-
-
-        alert('Thank you for completing the quiz!');
-        currentQuestionIndex = 1;
-        answers = [];
-        document.getElementById('answerSection').style.display = 'block';
-        userNameSection.style.display = 'none';
-        nextButton.style.display = 'inline-block';
-        displayQuestion();
-
-
-    });
-
-    displayQuestion();
 
     </script>
 </body>
 </html>
-
-<?php
-    /*function getQuestion($type) {
-
-        $db_username = "root";
-        $db_password = "";
-        $host = "localhost";
-        $database = "quiz_db";
-    
-        $server = mysqli_connect($host, $db_username, $db_password);
-        $connection = mysqli_select_db($server, $database);
-        
-        $query = "SELECT * FROM `questions`";
-        $result = mysqli_query($server, $query);
-
-
-        if ( !$result ) {
-            echo mysqli_error($server);
-            die;
-        } else {
-            $row_cnt = $result->num_rows;
-            if ($type == "index") {
-                return $row_cnt;
-            } else {
-                return mysqli_fetch_array($result);
-            }
-        }
-    }*/
-    
-?>
