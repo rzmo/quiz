@@ -1,0 +1,30 @@
+body {
+    color: white;
+
+    background-color: #0d081f;
+}
+
+h1 {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    padding-top: 20px;
+}
+
+.maincontainer {
+    background-color: #1b1b30;
+    border-radius: 20px;
+    width: 60vw;
+    height: 60vh;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.label {
+    margin: auto;
+}
+
+#answercheckbox {
+    margin: 0;
+}
