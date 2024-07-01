@@ -1,7 +1,6 @@
 body {
     color: white;
-
-    background-color: #0d081f;
+    background-color: #13121C;
 }
 
 h1 {
@@ -13,13 +12,22 @@ h1 {
 }
 
 .maincontainer {
-    background-color: #1b1b30;
+    background-color: #181827;
     border-radius: 20px;
     width: 60vw;
     height: 60vh;
     margin: 0 auto;
     text-align: center;
 }
+.subcontainer {
+    background-color: #13121C;
+    border-radius: 20px;
+    width: 48vw;
+    height: 40vh;
+    margin: 0 auto;
+    text-align: center;
+}
+
 
 .label {
     margin: auto;

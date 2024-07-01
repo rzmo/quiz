@@ -6,14 +6,13 @@
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
+    
+    <div class="maincontainer">
 
-    <div class="maincont">
         <h1>General Knowledge Quiz</h1>
+        <div class="subcontainer">
 
-        <div class="subcont">
             <p id="questionlabel" class="label">QuestionLabel</p>
-            <p id="answerlabel" class="label">AnswerLabel</p>
-            <p id="scorelabel" class="label">ScoreLabel</p>
 
             <input id="answercheckbox" type="checkbox">
             <form id="answerdropdown" action="#">
@@ -26,21 +25,42 @@
             </form>
             <input id="answertext" type="text">
 
+            <button id="nextButton">Next</button>
+
+            <div id="userNameSection" style="display:none;">
+                <label for="userName">Enter your name:</label>
+                <input id="userName" type="text">
+                <button id="submitName">Submit</button>
+            </div>
+
         </div>
+
     </div>
+    
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
+
+    questions = {
+        "1":["What is 1+1?","2","text",[]],
+        "2":["Third letter of alphabet?","c","dropdown",["a","b","c"]],
+        "3":["What is 1+1?","2","text",[]],
+        "4":["What is 1+1?","2","text",[]],
+        "5":["What is 1+1?","2","text",[]],
+        "6":["What is 1+1?","2","text",[]],
+        "7":["What is 1+1?","2","text",[]],
+        "8":["What is 1+1?","2","text",[]],
+        "9":["What is 1+1?","2","text",[]],
+        "10":["What is 1+1?","2","text",[]]
+    }
 
     window.addEventListener('DOMContentLoaded', function() {
 
     // Initialise selection of question & answer labels
     let questionLabel = document.getElementById("questionlabel")
     let answerLabel = document.getElementById("answerlabel")
-    let scoreLabel = document.getElementById("scorelabel")
 
     questionLabel.innerHTML = "Q Init"
-    answerLabel.innerHTML = "A Init"
-    scoreLabel.innerHTML = "# Marks"
+    answerLabel.innerHTML = ""
 
     // Hide by default all input options to allow for dynamic input type based on question
     // (i.e. allowing some questions to be multiple choice, others text input etc, others checkbox)
@@ -48,9 +68,7 @@
     let dropdownInput = document.getElementById("answerdropdown");
     let textInput = document.getElementById("answertext");
 
-    checkboxInput.style.display = "none";
-    dropdownInput.style.display = "none";
-    textInput.style.display = "none";
+
 
     function toggleInput(name) {
         let choice = null
@@ -70,36 +88,18 @@
         }
     }
 
-    function getQuestion(index, type) {
-        let question = "<?php echo getQuestion("question");?>";
-        let answer = "<?php echo getQuestion("answer");?>";
-        let value = "<?php echo getQuestion("value");?>";
+    toggleInput("checkbox")
+    toggleInput("dropdown")
+    toggleInput("text")
 
-        let array = [];
-
-        if (type == "question") {
-            array = question;
-        } else if (type == "answer") {
-            array = answer;
-        } else if (type= "value") {
-            array = value;
-        }
-
-        return array;
-    }
-
-    questionLabel.innerHTML = getQuestion(1, "question");
-    answerLabel.innerHTML = getQuestion(1, "answer");
-    scoreLabel.innerHTML = getQuestion(1, "value") + " Marks";
-
-});
+    });
 
     </script>
 </body>
 </html>
 
 <?php
-    function getQuestion($type) {
+    /*function getQuestion($type) {
 
         $db_username = "root";
         $db_password = "";
@@ -124,5 +124,6 @@
                 return mysqli_fetch_array($result);
             }
         }
-    }
+    }*/
+    
 ?>
