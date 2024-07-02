@@ -260,3 +260,9 @@ tr:hover {background-color: #ddd;}
     color:#ffffff !important;
     background-color: #24222e !important;
 }
+
+#madeicon {
+    position:fixed;
+    right: 20px;
+    bottom: 20px;
+}
