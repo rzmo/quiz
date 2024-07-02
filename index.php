@@ -7,12 +7,16 @@
 </head>
 <body>
     <button id="refreshbutton" onclick="refresh()"><img id="refreshicon" src="public/refreshIcon.svg"></button>
+    <form id="trophycta" action="leaderboard.php">
+        <button class="trophybutton"><img id="iconsvg" src="public/trophyIcon.svg"></button>
+    </form>
+    <button id="themebutton" onclick="darkMode()"><img id="iconsvg" src="public/moonIcon.svg"></button>
     <div class="maincontainer">
 
         <h1 id="header">General Knowledge Quiz</h1>
-        <form action="leaderboard.php">
-                <button id="backbutton">See Past Results</button>
-        </form>
+        <!--<form action="leaderboard.php">
+            <button class="trophybutton"><img id="iconsvg" src="public/trophyIcon.svg"></button>
+        </form>-->
         
         <?php
 
@@ -54,7 +58,6 @@
     </div>
     
     <script>
-
         let answerdict = {
             "0": 1,
             "1": 1,
@@ -91,12 +94,24 @@
                 answertrack = answertrack + 1;
                 console.log(answertrack)
                 if (answerdict[questionNum] == buttonNum) {
-                    element.style.backgroundColor = "#47de60";
+                    element.setAttribute('style', 'background-color: #47de60 !important');
                     score = score + 1;
                     let scoreTracker = document.getElementById("scoreinput");
                     scoreTracker.value = score/2
+                    for (let i = 0; i < buttons.length; i++) {
+                        buttons[i].classList.add("incorrect");
+                    }
+                    buttons[buttonNum].classList.remove("incorrect");
+                    buttons[buttonNum].classList.add("correct");
                 } else {
-                    element.style.backgroundColor = "#db3535";
+                    element.setAttribute('style', 'background-color: #db3535 !important');
+                    for (let i = 0; i < buttons.length; i++) {
+                        if (answerdict[questionNum] == i) {
+                            buttons[i].classList.add("correct");
+                        } else {
+                            buttons[i].classList.add("incorrect");
+                        }
+                    }   
                 }
                 
                 if (answertrack >= 20) {
@@ -153,9 +168,28 @@
         }
 
         function refresh() {
-            console.log("Refreshing")
+            console.log("Refreshing");
+            let icon = document.getElementById("refreshicon");
+            icon.style.transform = "rotate(360deg)"
+            setTimeout(reloadPage, 800);
         }
 
+        function reloadPage() {
+            location.reload();
+        }
+
+        function darkMode() {
+            document.body.classList.toggle('dark-mode');
+
+            let elements = document.getElementsByTagName('button');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].classList.toggle("dark-mode");
+            }
+        }
     </script>
 </body>
 </html>
+
+
+<!-- nver eat alone
+getting to yes

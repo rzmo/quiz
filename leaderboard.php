@@ -7,12 +7,17 @@
 </head>
 <body>
     
+    <button id="refreshbutton" onclick="refresh()"><img id="refreshicon" src="public/refreshIcon.svg"></button>
+    <form id="trophycta" action="index.php">
+        <button class="iconbutton"><img id="iconsvg" src="public/backIcon.svg"></button>
+    </form>
+    <button id="themebutton" onclick="darkMode()"><img id="iconsvg" src="public/moonIcon.svg"></button>
     <div class="maincontainer">
 
         <h1 id="header">General Knowledge Quiz - Past Results</h1>
-        <form action="index.php">
-                <button id="backbutton">Go Back</button>
-        </form>
+        <!--<form action="index.php">
+            <button class="iconbutton"><img id="iconsvg" src="public/backIcon.svg"></button>
+        </form>-->
 
         <?php
         if (isset($_POST['name']) and $_POST['name'] != "") {
@@ -60,7 +65,34 @@
             ?>
         </table>
         </div>
+        <form action="index.php" style="margin-bottom: 40px;">
+            <button class="iconbutton"><img id="iconsvg" src="public/backIcon.svg"></button>
+        </form>
     </div>
+
+    <script>
+
+        function refresh() {
+            console.log("Refreshing");
+            let icon = document.getElementById("refreshicon");
+            icon.style.transform = "rotate(360deg)"
+            setTimeout(reloadPage, 800);
+        }
+
+        function reloadPage() {
+            location.reload();
+        }
+
+        function darkMode() {
+            document.body.classList.toggle('dark-mode');
+
+            let elements = document.getElementsByTagName('button');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].classList.toggle("dark-mode");
+            }
+        }
+    </script>
+
 </body>
 </html>
 
