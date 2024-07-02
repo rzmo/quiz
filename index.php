@@ -6,10 +6,13 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
-    
+    <button id="refreshbutton" onclick="refresh()"><img id="refreshicon" src="public/refreshIcon.svg"></button>
     <div class="maincontainer">
 
         <h1 id="header">General Knowledge Quiz</h1>
+        <form action="leaderboard.php">
+                <button id="backbutton">See Past Results</button>
+        </form>
         
         <?php
 
@@ -30,10 +33,10 @@
         foreach ($members as $q => $a) {
             echo "<h2 class='question'>$q</h2>";
             echo "<div class='flexcont' id='cont$count'>";
-            echo "<button class='flexbutton' id='$count,0'>$a[0]</button>";
-            echo "<button class='flexbutton' id='$count,1'>$a[1]</button>";
-            echo "<button class='flexbutton' id='$count,2'>$a[2]</button>";
-            echo "<button class='flexbutton' id='$count,3'>$a[3]</button>";
+            echo "<button class='flexbutton' onclick='chooseAns(this)' id='$count,0'>$a[0]</button>";
+            echo "<button class='flexbutton' onclick='chooseAns(this)' id='$count,1'>$a[1]</button>";
+            echo "<button class='flexbutton' onclick='chooseAns(this)' id='$count,2'>$a[2]</button>";
+            echo "<button class='flexbutton' onclick='chooseAns(this)' id='$count,3'>$a[3]</button>";
             echo "</div>";
             $count += 1;
         }
@@ -41,15 +44,15 @@
         ?>
 
         <h2 class='question'>Enter your name to save your results.</h2>
-        <form action="public/leaderboard.php" method="POST">
+        <form action="leaderboard.php" method="POST">
                 <input id="nameinput" type="text" name="name">
                 <input id="scoreinput" type="hidden" name="score" value="0"/>
-                <button id="submitbutton">Submit</button>
+                <button id="submitbutton" disabled>Submit</button>
         </form>
+        <h2 id="validationText">Please enter your name.</h2>
 
     </div>
     
-    <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
     <script>
 
         let answerdict = {
@@ -65,6 +68,7 @@
             "9": 1
         }
 
+        let answertrack = 0;
         let score = 0;
         console.log("abc")
 
@@ -84,13 +88,20 @@
                 for (let i = 0; i < buttons.length; i++) {
                     buttons[i].disabled = "true";
                 }
+                answertrack = answertrack + 1;
+                console.log(answertrack)
                 if (answerdict[questionNum] == buttonNum) {
-                    element.style.backgroundColor = "green";
-                    score += 1;
+                    element.style.backgroundColor = "#47de60";
+                    score = score + 1;
+                    let scoreTracker = document.getElementById("scoreinput");
+                    scoreTracker.value = score/2
                 } else {
-                    element.style.backgroundColor = "red";
+                    element.style.backgroundColor = "#db3535";
                 }
-
+                
+                if (answertrack >= 20) {
+                    validateName();
+                }
                 return "Clicked the " + buttonNum + " button for question " + questionNum;
 
             }
@@ -113,6 +124,37 @@
 
         });
 
+        let nameInput = document.getElementById("nameinput");
+        nameInput.addEventListener("input", validateName);
+
+        function validateName() {
+            let validationText = document.getElementById("validationText");
+            let submitButton = document.getElementById("submitbutton")
+            let nameInput = document.getElementById("nameinput");
+            name = nameInput.value;
+            if (name == "" || name == " " || name.length == 0) {
+                validationText.innerHTML = "Please enter your name.";
+                submitButton.disabled = true;
+            } else if (name.length < 3) {
+                validationText.innerHTML = "Your name cannot be shorter than 3 characters.";
+                submitButton.disabled = true;
+            } else if (name.length > 20) {
+                validationText.innerHTML = "Your name cannot be longer than 20 characters.";
+                submitButton.disabled = true;
+            } else {
+                if (answertrack >= 20) {
+                    validationText.innerHTML = "Press 'Submit' to save your results.";
+                    submitButton.disabled = false;
+                } else {
+                    validationText.innerHTML = "Please answer all the questions before you save your results.";
+                    submitButton.disabled = true;
+                }
+            }
+        }
+
+        function refresh() {
+            console.log("Refreshing")
+        }
 
     </script>
 </body>
