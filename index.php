@@ -30,10 +30,10 @@
         foreach ($members as $q => $a) {
             echo "<h2 class='question'>$q</h2>";
             echo "<div class='flexcont' id='cont$count'>";
-            echo "<button class='flexbutton' onclick='chooseAns($count, 0, this)'>$a[0]</button>";
-            echo "<button class='flexbutton' onclick='chooseAns($count, 1, this)'>$a[1]</button>";
-            echo "<button class='flexbutton' onclick='chooseAns($count, 2, this)'>$a[2]</button>";
-            echo "<button class='flexbutton' onclick='chooseAns($count, 3, this)'>$a[3]</button>";
+            echo "<button class='flexbutton' id='$count,0'>$a[0]</button>";
+            echo "<button class='flexbutton' id='$count,1'>$a[1]</button>";
+            echo "<button class='flexbutton' id='$count,2'>$a[2]</button>";
+            echo "<button class='flexbutton' id='$count,3'>$a[3]</button>";
             echo "</div>";
             $count += 1;
         }
@@ -49,7 +49,7 @@
 
     </div>
     
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
     <script>
 
         let answerdict = {
@@ -66,24 +66,53 @@
         }
 
         let score = 0;
+        console.log("abc")
 
-        function chooseAns(questionNum, buttonNum, clickedButton) {
+        function chooseAns(element) {
+
+            let idToParse = String(element.id);
+            let idArray = idToParse.split(","); // Obtain questionNum and buttonNum from id - id stored as "questionNum,buttonNum"
+            // Index 0 = questionNum
+            // Index 1 = buttonNum
+
+            let questionNum = idArray[0]
+            let buttonNum = idArray[1]
 
             let group = document.getElementById("cont"+questionNum);
-            let buttons = group.getElementsByClassName("flexbutton");
-            for (let i = 0; i < buttons.length; i++) {
-                buttons[i].disabled = "true";
-            }​;
-            if (answerdict[questionNum] == buttonNum) {
-                clickedbutton.style.backgroundColor = "green";
-                score += 1;
-            } else {
-                clickedbutton.style.backgroundColor = "red";
-            };
+            if (group) {
+                let buttons = group.getElementsByClassName("flexbutton");
+                for (let i = 0; i < buttons.length; i++) {
+                    buttons[i].disabled = "true";
+                }
+                if (answerdict[questionNum] == buttonNum) {
+                    element.style.backgroundColor = "green";
+                    score += 1;
+                } else {
+                    element.style.backgroundColor = "red";
+                }
 
-            return "Clicked the " + buttonNum + " button for question " + questionNum;
+                return "Clicked the " + buttonNum + " button for question " + questionNum;
 
+            }
         }
+
+        console.log("abc")
+        document.addEventListener("DOMContentLoaded", (event) => {
+            console.log("xyz")
+
+            // Onclick function cannot be defined within the html, since function would be out of scope and 'not defined', thus add function after.
+            let allButtons = document.getElementsByClassName("flexbutton");
+            console.log(allButtons)
+            for (let ind = 0; ind < allButtons.length; ind++) {
+                console.log(ind + " => " + allButtons[ind].id)
+                allButtons[ind].addEventListener("click", function(){
+                    chooseAns(allButtons[ind]);
+                });
+                    
+            }
+
+        });
+
 
     </script>
 </body>
