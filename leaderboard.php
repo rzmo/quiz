@@ -3,10 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>Past Results</title>
+    <link rel="icon" type="image/png" href="public/icon.png">
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
-    
+    <img id="madeicon" src="public/madeIcon.svg">
+   
     <button id="refreshbutton" onclick="refresh()"><img id="refreshicon" src="public/refreshIcon.svg"></button>
     <form id="trophycta" action="index.php">
         <button class="iconbutton"><img id="iconsvg" src="public/backIcon.svg"></button>
@@ -21,7 +23,7 @@
 
         <?php
         if (isset($_POST['name']) and $_POST['name'] != "") {
-            echo "<h2 class='anntext'> Heya, ".$_POST["name"].", you got a score of ".$_POST["score"]."/10 </h2>";
+            echo "<h2 class='anntext'> Heya, ".$_POST["name"].", you got ".$_POST["score"]." correct! </h2>";
         }
         ?>
         <div id="tablecont">

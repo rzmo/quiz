@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Knowledge Quiz</title>
+    <title>Quiz</title>
+    <link rel="icon" type="image/png" href="public/icon.png">
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
+    <img id="madeicon" src="public/madeIcon.svg">
+
     <button id="refreshbutton" onclick="refresh()"><img id="refreshicon" src="public/refreshIcon.svg"></button>
     <form id="trophycta" action="leaderboard.php">
         <button class="trophybutton"><img id="iconsvg" src="public/trophyIcon.svg"></button>
@@ -30,7 +33,8 @@
             "What is the largest internal organ in the human body?"=>["Lungs", "Heart", "Kidneys", "Liver"],
             "What percentage of the Earth is covered by water?"=>["51%", "61%", "71%", "81%"],
             "Who invented the World Wide Web?"=>["Tim Berners-Lee", "Stephen Hawking", "Alan Turing", "James D. Watson"],
-            "What is the main ingredient of gnocchi?"=>["Rice", "Potato", "Pasta", "Chocolate"]
+            "What is the main ingredient of gnocchi?"=>["Rice", "Potato", "Pasta", "Chocolate"],
+            "What does PHP stand for?"=>["Physics Hypertext Processor", "Private Hosting Protocol", "Personal Home Page", "Professional Hyperlink Program"]
         );
 
         $count = 0;
@@ -68,7 +72,8 @@
             "6": 3,
             "7": 2,
             "8": 0,
-            "9": 1
+            "9": 1,
+            "10": 2
         }
 
         let answertrack = 0;
@@ -114,7 +119,7 @@
                     }   
                 }
                 
-                if (answertrack >= 20) {
+                if (answertrack >= (2*Object.keys(answerdict).length)) {
                     validateName();
                 }
                 return "Clicked the " + buttonNum + " button for question " + questionNum;
@@ -157,7 +162,7 @@
                 validationText.innerHTML = "Your name cannot be longer than 20 characters.";
                 submitButton.disabled = true;
             } else {
-                if (answertrack >= 20) {
+                if (answertrack >= 2*Object.keys(answerdict).length) {
                     validationText.innerHTML = "Press 'Submit' to save your results.";
                     submitButton.disabled = false;
                 } else {
@@ -191,5 +196,5 @@
 </html>
 
 
-<!-- nver eat alone
+<!-- ne  ver eat alone
 getting to yes
