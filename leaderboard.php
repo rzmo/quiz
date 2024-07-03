@@ -7,6 +7,9 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
+    <a href="panel.php?" target="_blank">
+        <img id="wficon" src="public/wfIcon.svg">
+    </a>
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
@@ -35,6 +38,7 @@
                 <th>Score</th>
             </tr>
             <?php
+
                 if (isset($_POST['name']) and $_POST['name'] != "") {
                     echo "<tr>";
                     echo "<td>". $_POST["name"] . "</td>";
@@ -65,7 +69,7 @@
                         }*/
                     }
                 }
-                
+
             ?>
         </table>
         </div>
@@ -127,5 +131,7 @@ if (isset($_POST['name']) and $_POST['name'] != "") {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 }
+
+mysqli_close($server);
 
 ?>

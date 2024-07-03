@@ -6,8 +6,10 @@
     <link rel="icon" type="image/png" href="public/icon.png">
     <link href="public/style.css" rel="stylesheet"/>
 </head>
-<i>
-    <img id="wficon" src="public/wfIcon.svg">
+<body>
+    <a href="panel.php?" target="_blank">
+        <img id="wficon" src="public/wfIcon.svg">
+    </a>
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
@@ -26,89 +28,45 @@
         // Number of questions to serve the user. Keep in mind if the URL specifies question quantity, this will be overridden.
         $numberOfQuestions = 5;
 
-        // Question array.
-        $questionArr = array(
-            "What is 1 + 1" => array(
-                "options" => ["1","2","3","4"],
-                "identifier" => "0",
-            ),
-            "What is the closest planet to the Earth?" => array(
-                "options" => ["Pluto", "Mars", "Neptune", "The Sun"],
-                "identifier" => "1",
-            ),
-            "How many continents are there?" => array(
-                "options" => ["4", "5", "7", "9"],
-                "identifier" => "2",
-            ),
-            "Who was the Prime Minister during WWII?" => array(
-                "options" => ["Hillary Clinton", "Winston Churchill", "Percy Jackson", "Rishi Sunak"],
-                "identifier" => "3",
-            ),
-            "What is the capital of Australia?" => array(
-                "options" => ["Victoria", "Canberra", "Sydney", "Melbourne"],
-                "identifier" => "4",
-            ),
-            "What does CPU stand for?" => array(
-                "options" => ["Central Processing Unit", "Control Panel Unit", "It's waffle", "Core Processor Unit"],
-                "identifier" => "5",
-            ),
-            "What is the largest internal organ in the human body?" => array(
-                "options" => ["Lungs", "Heart", "Kidneys", "Liver"],
-                "identifier" => "6",
-            ),
-            "What percentage of the Earth is covered by water?" => array(
-                "options" => ["51%", "61%", "71%", "81%"],
-                "identifier" => "7",
-            ),
-            "Who invented the World Wide Web?" => array(
-                "options" => ["Tim Berners-Lee", "Stephen Hawking", "Alan Turing", "James D. Watson"],
-                "identifier" => "8",
-            ),
-            "What is the main ingredient of gnocchi?" => array(
-                "options" => ["Rice", "Potato", "Pasta", "Chocolate"],
-                "identifier" => "9",
-            ),
-            "What does PHP stand for?" => array(
-                "options" => ["Physics Hypertext Processor", "Private Hosting Protocol", "Personal Home Page", "Professional Hyperlink Program"],
-                "identifier" => "10",
-            ),
-            "What is the capital of France?" => array(
-                "options" => ["Berlin", "Madrid", "Turkmenistan", "Paris"],
-                "identifier" => "11",
-            ),
-            "Who wrote 'To Kill a Mockingbird'?" => array(
-                "options" => ["J.K Rowling", "Me", "Harper Lee", "Mark Twain"],
-                "identifier" => "12",
-            ),
-            "What is the smallest country in the world?" => array(
-                "options" => ["Monaco", "San Marino", "Vatican City", "Liechtenstein"],
-                "identifier" => "13",
-            ),
-            "Which element has the chemical symbol 'O'?" => array(
-                "options" => ["Oxygen", "Gold", "Silver", "Hydrogen"],
-                "identifier" => "14",
-            ),
-            "In which year did the Titanic sink?" => array(
-                "options" => ["1905", "1912", "1918", "1923"],
-                "identifier" => "15",
-            ),
-            "Who painted the Mona Lisa?" => array(
-                "options" => ["Pablo Picasso", "Leonardo da Vinci", "Michelangelo", "Vincent van Gogh"],
-                "identifier" => "16",
-            ),
-            "Which is the largest ocean on Earth?" => array(
-                "options" => ["Atlantic", "Indian", "Arctic", "Pacific"],
-                "identifier" => "17",
-            ),
-            "How many states are there in the United States?" => array(
-                "options" => ["48", "49", "50", "51"],
-                "identifier" => "18",
-            ),
-            "Which country is known as the Land of the Rising Sun?" => array(
-                "options" => ["China", "Japan", "South Korea", "Thailand"],
-                "identifier" => "19",
-            ) //20 questions in total
-        );
+        // Fetch questions from DB
+        $server = mysqli_connect("localhost", "root", "");
+        $connection = mysqli_select_db($server, "quiz_db");
+
+        $query = "SELECT `question`, `questionid`, `option1`, `option2`, `option3`, `option4` FROM `questions`";
+        $result = mysqli_query($server, $query);
+
+        $questionArr = array();
+
+        // Fetch each row and format it into the desired structure
+        while ($row = mysqli_fetch_assoc($result)) {
+            $question = array(
+                'options' => array(
+                    $row['option1'],
+                    $row['option2'],
+                    $row['option3'],
+                    $row['option4'],
+                ),
+                'identifier' => $row['questionid'],
+            );
+    
+            // Add question to the main array
+            $questionArr[$row['question']] = $question;
+        }
+
+        $query = "SELECT `questionid`, `answer` FROM `questions`";
+        $result = mysqli_query($server, $query);
+
+        $answerdict = array();
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $answerdict[$row['questionid']] = $row['answer'];
+        }
+
+        mysqli_close($server);
+
+        $answerdict_json = json_encode($answerdict);
+
+        echo "<script>let answerdict = " . $answerdict_json . ";</script>";
 
         if (isset($_GET['number'])) {
             $numberOfQuestions = $_GET['number'];
@@ -171,29 +129,6 @@
     <script>
 
         console.log("JS recognises Number of Qs => " + numberOfQuestions + " from PHP");
-
-        let answerdict = {
-            "0": 1,
-            "1": 1,
-            "2": 2,
-            "3": 1,
-            "4": 1,
-            "5": 0,
-            "6": 3,
-            "7": 2,
-            "8": 0,
-            "9": 1,
-            "10": 2,
-            "11": 3,
-            "12": 2,
-            "13": 2,
-            "14": 0,
-            "15": 1,
-            "16": 1,
-            "17": 3,
-            "18": 2,
-            "19": 1
-        }
 
         let answertrack = 0;
         let score = 0;
@@ -296,7 +231,3 @@
     </script>
 </body>
 </html>
-
-
-<!-- ne  ver eat alone
-getting to yes
