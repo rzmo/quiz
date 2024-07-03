@@ -187,6 +187,30 @@ tr:hover {background-color: #ddd;}
     height: 50px;
 }
 
+#homecta {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+}
+
+#homebutton {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    width: 50px;
+    height: 50px;
+}
+
+#homebutton:hover {
+    background-color: #dddddd;
+}
+
+#homebutton:active {
+    background-color: #c4c4c4;
+}
+
 .iconbutton {
     background-color: #ffffff;
     border: none;
@@ -277,6 +301,100 @@ tr:hover {background-color: #ddd;}
     bottom: 20px;
 }
 
+#headerbar {
+    width: calc(100% - 40px);
+    height: 50px;
+    background-color: #ffffff;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#dbtablecont {
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    width: auto;
+    max-width: 85%;
+}
+
+.actionbutton {
+    border: none;
+    display: inline-block;
+}
+
+.deletebutton {
+    background-color: #db3535;
+    width: 40px;
+    height: 40px;
+}
+
+.editbutton {
+    background-color: #3590db;
+    width: 40px;
+    height: 40px;
+}
+
+.deletebutton:hover {
+    background-color: #c22e2e;
+}
+
+.editbutton:hover {
+    background-color: #3083c7;
+}
+
+.deletebutton:active {
+    background-color: #a52828;
+}
+
+.editbutton:active {
+    background-color: #2569a0;
+}
+
+.dbtable th, .dbtable td {
+    width: auto;
+}
+
+.addbutton {
+    background-color: #5faf58;
+    width: calc(100% - 4px);
+    height: 50px;
+    margin-top: 5px;
+    left: 0;
+    border: none;
+}
+
+.addbutton:hover {
+    background-color: #498844;
+}
+
+.addbutton:active {
+    background-color: #335f2f;
+}
+
+#addicon {
+    width: 40px;
+    height: 40px;
+}
+
+.dbtable tr:hover {
+    background-color: #eeeeee;
+}
+
+.actionform {
+    width: 40px;
+    height: 40px;
+}
+
+#tdid {
+    display: inline-flex;
+}
+
 /*#fader {
     position: fixed;
     top: 0;
@@ -309,3 +427,80 @@ tr:hover {background-color: #ddd;}
     opacity: 1;
     animation-name: fade-in;
 }*/
+
+.editform form {
+    width: 80%;
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.editform {
+    margin: auto;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.editform label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 250;
+    font-size: 20px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.editform input[type=text]{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 250;
+    font-size: 20px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #c4c4c4;
+    padding: 10px;
+}
+
+#formheader {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 400;
+    font-size: 40px;
+
+}
+
+#editsubmit {
+    margin-top: 30px;
+    background-color: #2569a0;
+    height: 50px;
+    border: none;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+#editsubmit:hover {
+    background-color: #3083c7;
+}
+
+#editsubmit:active {
+    background-color: #2569a0;
+}
+
+#createsubmit {
+    margin-top: 30px;
+    background-color: #5faf58;
+    height: 50px;
+    border: none;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 50px;
+}
+
+#createsubmit:hover {
+    background-color: #498844;
+}
+
+#createsubmit:active {
+    background-color: #335f2f;
+}
