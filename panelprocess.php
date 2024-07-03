@@ -17,6 +17,30 @@
 
 
 <?php
+function checkQuestionIDExists($paramQuestionID) {
+
+    $server = mysqli_connect("localhost", "root", "");
+    $connection = mysqli_select_db($server, "quiz_db");
+    
+    if (!$server || !$connection) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+    
+    $query = "SELECT 1 FROM questions WHERE questionID = '$paramQuestionID'";
+    
+    $stmt = mysqli_prepare($server, $query);
+        
+    mysqli_stmt_execute($stmt);
+    
+    mysqli_stmt_store_result($stmt);
+    
+    $exists = mysqli_stmt_num_rows($stmt) > 0;
+    
+    mysqli_stmt_close($stmt);
+    mysqli_close($server);
+    
+    return $exists;
+}
 
 if (isset($_POST['creatingnew'])) {
     //create info
@@ -30,6 +54,24 @@ if (isset($_POST['creatingnew'])) {
         $_POST["answer"]
     );
     
+    $placeholderNum = 0;
+    while (checkQuestionIDExists('PLACEHOLDER_ID_'.$placeholderNum) == true) {
+        $placeholderNum += 1;
+    }
+    for ($x = 0; $x <= 5; $x++) {
+        if ($x != 1) {
+            if (!isset($requestContent[$x]) || strlen($requestContent[$x]) < 1 || $requestContent[$x] == " ") {
+                $requestContent[$x] = "PLACEHOLDER_".$placeholderNum;
+            }
+        }
+    }
+    if (!isset($requestContent[1]) || strlen($requestContent[1]) < 1 || $requestContent[1] == " ") {
+        $requestContent[1] = "PLACEHOLDER_ID_".$placeholderNum;
+    }
+    if (!isset($requestContent[6]) || strlen(strval($requestContent[6])) < 1 || $requestContent[6] == " " || $requestContent[6] == "") {
+        $requestContent[6] = 1;
+    }
+
     $server = mysqli_connect("localhost", "root", "");
     $connection = mysqli_select_db($server, "quiz_db");
 
@@ -50,6 +92,24 @@ if (isset($_POST['creatingnew'])) {
         $_POST["option4"],
         $_POST["answer"]
     );
+
+    $placeholderNum = 0;
+    while (checkQuestionIDExists('PLACEHOLDER_ID_'.$placeholderNum) == true) {
+        $placeholderNum += 1;
+    }
+    for ($x = 0; $x <= 5; $x++) {
+        if ($x != 1) {
+            if (!isset($requestContent[$x]) || strlen($requestContent[$x]) < 1 || $requestContent[$x] == " ") {
+                $requestContent[$x] = "PLACEHOLDER_".$placeholderNum;
+            }
+        }
+    }
+    if (!isset($requestContent[1]) || strlen($requestContent[1]) < 1 || $requestContent[1] == " ") {
+        $requestContent[1] = "PLACEHOLDER_ID_".$placeholderNum;
+    }
+    if (!isset($requestContent[6]) || strlen(strval($requestContent[6])) < 1 || $requestContent[6] == " " || $requestContent[6] == "") {
+        $requestContent[6] = 1;
+    }
     
     $server = mysqli_connect("localhost", "root", "");
     $connection = mysqli_select_db($server, "quiz_db");
@@ -98,7 +158,7 @@ if (isset($_POST['creatingnew'])) {
                 <label>Option 4</label>
                 <input type='text' name='option4' value='".$entry["option4"]."'>
                 <label>Answer (Option #)</label>
-                <input type='text' name='answer' value='".($entry["answer"]+1)."'>
+                <input type='number' name='answer' min='1' max='4' value='".($entry["answer"]+1)."'>
                 <input id='editsubmit' type='submit' value='Save Changes'></input>
             </form>
         ";
@@ -108,19 +168,19 @@ if (isset($_POST['creatingnew'])) {
                 <h1 id='formheader'>Creating New Question</h1>
                 <input type='hidden' name='creatingnew' value='YES'>
                 <label>Question ID</label>
-                <input type='text' name='questionid' value='exampleID'>
+                <input type='text' name='questionid' placeholder='exampleID' value=''>
                 <label>Question</label>
-                <input type='text' name='question' value='What is XYZ?'>
+                <input type='text' name='question' placeholder='What is xyz?' value=''>
                 <label>Option 1</label>
-                <input type='text' name='option1' value='Choice One'>
+                <input type='text' name='option1' placeholder='Choice One' value=''>
                 <label>Option 2</label>
-                <input type='text' name='option2' value='Choice Two'>
+                <input type='text' name='option2' placeholder='Choice Two' value=''>
                 <label>Option 3</label>
-                <input type='text' name='option3' value='Choice Three'>
+                <input type='text' name='option3' placeholder='Choice Three' value=''>
                 <label>Option 4</label>
-                <input type='text' name='option4' value='Choice Four'>
-                <label>Answer (Option #)</label>
-                <input type='text' name='answer' value='Set this to the index for the correct option. (0-3)'>
+                <input type='text' name='option4' placeholder='Choice Four' value=''>
+                <label>Answer Index</label>
+                <input type='number' name='answer' min='1' max='4' placeholder='Whatever number the correct option is (1-4)' value=''>
                 <input id='createsubmit' type='submit' value='Create'></input>
             </form>
         ";

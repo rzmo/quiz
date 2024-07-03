@@ -7,7 +7,7 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
-    <a href="panel.php?" target="_blank">
+    <a href="panel.php?">
         <img id="wficon" src="public/wfIcon.svg">
     </a>
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
