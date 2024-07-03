@@ -358,6 +358,11 @@ tr:hover {background-color: #ddd;}
 
 .dbtable th, .dbtable td {
     width: auto;
+    min-width: 5vw;
+}
+
+.dtable {
+    min-width: 80%;
 }
 
 .addbutton {
@@ -450,6 +455,15 @@ tr:hover {background-color: #ddd;}
 }
 
 .editform input[type=text]{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 250;
+    font-size: 20px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #c4c4c4;
+    padding: 10px;
+}
+.editform input[type=number]{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 250;
     font-size: 20px;
