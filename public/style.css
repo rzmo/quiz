@@ -266,8 +266,14 @@ tr:hover {background-color: #ddd;}
 }
 
 #madeicon {
-    position:fixed;
+    position: fixed;
     right: 20px;
+    bottom: 20px;
+}
+
+#wficon {
+    position: fixed;
+    left: 20px;
     bottom: 20px;
 }
 
