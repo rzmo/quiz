@@ -7,8 +7,10 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
-    <img id="madeicon" src="public/madeIcon.svg">
-   
+    <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
+        <img id="madeicon" src="public/madeIcon.svg">
+    </a>
+
     <button id="refreshbutton" onclick="refresh()"><img id="refreshicon" src="public/refreshIcon.svg"></button>
     <form id="trophycta" action="index.php">
         <button class="iconbutton"><img id="iconsvg" src="public/backIcon.svg"></button>
@@ -43,7 +45,7 @@
                 $server = mysqli_connect("localhost", "root", "");
                 $connection = mysqli_select_db($server, "quiz_db");
 
-                $query = "SELECT * FROM `scores`";
+                $query = "SELECT * FROM `scores` ORDER BY score DESC";
                 $result = mysqli_query($server, $query);
                 if ( !$result ) {
                     echo mysqli_error($server);
