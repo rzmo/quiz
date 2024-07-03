@@ -7,6 +7,7 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <i>
+    <img id="wficon" src="public/wfIcon.svg">
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
@@ -144,8 +145,12 @@
             echo "<h2 class='question'>$q</h2>";
             echo "<div class='flexcont' id='cont$identifier'>";
 
-            foreach ($options as $optionIndex => $option) {
-                echo "<button class='flexbutton' onclick='chooseAns(this)' id='$identifier,$optionIndex,'>$option</button>";
+            $indexArr = [0,1,2,3];
+            shuffle($indexArr);
+            $count = 0;
+            foreach ($indexArr as $i) {
+                echo "<button class='flexbutton' onclick='chooseAns(this)' id='$identifier,$i,$count'>$options[$i]</button>";
+                $count += 1;
             }
 
             echo "</div>";
@@ -202,6 +207,7 @@
 
             let questionNum = idArray[0];
             let buttonNum = idArray[1];
+            let orderFromleft = idArray[2];
 
             let group = document.getElementById("cont"+questionNum);
             if (group) {
@@ -219,12 +225,12 @@
                     for (let i = 0; i < buttons.length; i++) {
                         buttons[i].classList.add("incorrect");
                     }
-                    buttons[buttonNum].classList.remove("incorrect");
-                    buttons[buttonNum].classList.add("correct");
+                    buttons[orderFromleft].classList.remove("incorrect");
+                    buttons[orderFromleft].classList.add("correct");
                 } else {
                     element.setAttribute('style', 'background-color: #db3535 !important');
                     for (let i = 0; i < buttons.length; i++) {
-                        if (answerdict[questionNum] == i) {
+                        if (answerdict[questionNum] == buttons[i].id.split(",")[1]) {
                             buttons[i].classList.add("correct");
                         } else {
                             buttons[i].classList.add("incorrect");
