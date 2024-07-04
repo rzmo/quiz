@@ -25,13 +25,14 @@
         <table class="dbtable">
             <tr>
                 <th>SQL Query Ran</th>
+                <th>User</th>
                 <th>Datetime</th>
             </tr>
             <?php
                 $server = mysqli_connect("localhost", "root", "");
                 $connection = mysqli_select_db($server, "quiz_db");
 
-                $query = "SELECT `action`, `date` FROM `querylog`";
+                $query = "SELECT `action`, `user`, `date` FROM `querylog`";
                 $result = mysqli_query($server, $query);
                 if ( !$result ) {
                     echo mysqli_error($server);
@@ -41,6 +42,7 @@
                     {
                         echo "<tr>";
                         echo "<td>". $row["action"] . "</td>";
+                        echo "<td>". $row["user"] . "</td>";
                         echo "<td>". $row["date"] . "</td>";
                         echo "</tr>";
                     }
