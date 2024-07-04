@@ -1,7 +1,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #ffffff;
-    justify-content: center;
     transition: filter 0.5s;
     text-align: center;
 }
@@ -210,6 +209,10 @@ tr:hover {background-color: #ddd;}
 
 #homebutton:active {
     background-color: #c4c4c4;
+}
+
+.dark-mode #homebutton:hover {
+    background-color: #2e2b3a !important;
 }
 
 .iconbutton {
@@ -526,7 +529,7 @@ tr:hover {background-color: #ddd;}
 
 #passbtn {
     flex-direction: row;
-    flex-grow: 1;
+    flex-grow: 4;
     background-color: #5faf58;
     border: none;
     border-radius: 3px;
