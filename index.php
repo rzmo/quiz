@@ -13,6 +13,9 @@
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
+    <form id="usercta" action="login.html">
+        <button type="submit" id="homebutton"><img id="iconsvg" src="public/accountIcon.svg"></button>
+    </form>
 
     <button id="refreshbutton" onclick="refresh()"><img id="refreshicon" src="public/refreshIcon.svg"></button>
     <form id="trophycta" action="leaderboard.php">
@@ -238,7 +241,7 @@ if (isset($_POST["resetHash"])) {
 
     if ($_POST["resetHash"] == "yes") {
         echo "<script>console.log('logging out');</script>";
-        echo "<script>sessionStorage.removeItem('masterhash');sessionStorage.removeItem('passhash');</script>";
+        echo "<script>sessionStorage.removeItem('username');sessionStorage.removeItem('masterhash');sessionStorage.removeItem('passhash');</script>";
     }
 }
 

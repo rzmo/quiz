@@ -58,15 +58,25 @@
                         echo "<td>". ($row["answer"]+1) . "</td>";
                         echo "<td id='tdid'> 
                         <form class='actionform' action='panelprocess.php' method='post'>
+                            <input class='insertusername' type='hidden' name='username' value=''>
                             <input type='hidden' name='action' value='delete,".$row["questionid"]."'>
                             <button class='deletebutton actionbutton'><img src='public/deleteIcon.svg'></button>
                         </form>
                         <form class='actionform' action='panelprocess.php' method='post'>
+                            <input class='insertusername' type='hidden' name='username' value=''>
                             <input type='hidden' name='action' value='edit,".$row["questionid"]."'>
                             <button class='editbutton actionbutton'><img src='public/editIcon.svg'></button>
                         </form>
                         </td>";
-                            echo "</tr>";
+                        echo "</tr>";
+                        echo "
+                        <script>
+                            let elements = document.querySelectorAll('.insertusername');
+                            for (let i = 0, item; item = elements[i]; i++) {
+                                item.value = String(sessionStorage.getItem('username'));
+                            }
+                        </script>
+                        ";
                     }
                 }
             ?>
@@ -95,5 +105,13 @@
     } else if (!ph) {
         window.location.href = "login.html";
     }
+
+    function updateUsernameHiddenValues() {
+        let elements = document.querySelectorAll(".insertusername");
+        for (let i = 0, item; item = elements[i]; i++) {
+            item.value = String(sessionStorage.getItem("username"));
+        }
+    };
+
 
 </script>

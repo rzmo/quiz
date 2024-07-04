@@ -84,10 +84,11 @@ if (isset($_POST['creatingnew'])) {
     $result = mysqli_query($server, $query);
     $querytext = "INSERT INTO \`questions\`(\`question\`, \`questionid\`, \`option1\`, \`option2\`, \`option3\`, \`option4\`, \`answer\`) VALUES (\'$requestContent[0]\',\'$requestContent[1]\',\'$requestContent[2]\',\'$requestContent[3]\',\'$requestContent[4]\',\'$requestContent[5]\',$requestContent[6])";
     $datetime = strval(date("d/m/Y H:i:s"));
-    $query = "INSERT INTO `querylog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
+    $requestContent[6] += 1; 
     $querytext = "Created question $requestContent[1] - \'$requestContent[0]\', ($requestContent[2]) or ($requestContent[3]) or ($requestContent[4]) or ($requestContent[5]) - Answer is Option $requestContent[6]";
-    $query = "INSERT INTO `readablelog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $query = "INSERT INTO `readablelog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
     die();
@@ -103,6 +104,7 @@ if (isset($_POST['creatingnew'])) {
         $_POST["option4"],
         $_POST["answer"]
     );
+    $username = $_POST["username"];
 
     $placeholderNum = 0;
     while (checkQuestionIDExists('PLACEHOLDER_ID_'.$placeholderNum) == true) {
@@ -130,10 +132,11 @@ if (isset($_POST['creatingnew'])) {
     $result = mysqli_query($server, $query);
     $datetime = strval(date("d/m/Y H:i:s"));
     $querytext = "UPDATE \`questions\` SET \`question\`=\'$requestContent[0]\',\`option1\`=\'$requestContent[2]\',\`option2\`=\'$requestContent[3]\',\`option3\`=\'$requestContent[4]\',\`option4\`=\'$requestContent[5]\',\`answer\`=$requestContent[6] WHERE questionid = \'$requestContent[1]\'";
-    $query = "INSERT INTO `querylog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
+    $requestContent[6] += 1; 
     $querytext = "Edited question $requestContent[1] - \'$requestContent[0]\', ($requestContent[2]) or ($requestContent[3]) or ($requestContent[4]) or ($requestContent[5]) - Answer is Option $requestContent[6]";
-    $query = "INSERT INTO `readablelog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $query = "INSERT INTO `readablelog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."', '".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
     die();
@@ -141,6 +144,7 @@ if (isset($_POST['creatingnew'])) {
     //delete info
     
     $requestContent = $_POST["action"];
+    $username = $_POST["username"];
 
     $action = explode(",", $requestContent)[0];
     $questionID = explode(",", $requestContent)[1];
@@ -153,10 +157,10 @@ if (isset($_POST['creatingnew'])) {
         $result = mysqli_query($server, $query);
         $querytext = "DELETE FROM \`questions\` WHERE questionid = \'$questionID\'";
         $datetime = strval(date("d/m/Y H:i:s"));
-        $query = "INSERT INTO `querylog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+        $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
         $result = mysqli_query($server, $query);
         $querytext = "Deleted question ".$questionID;
-        $query = "INSERT INTO `readablelog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+        $query = "INSERT INTO `readablelog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."','".$username."','".strval($datetime)."')";
         $result = mysqli_query($server, $query);
         echo "<script>location.href = 'panel.php';</script>";
         die();
@@ -171,6 +175,7 @@ if (isset($_POST['creatingnew'])) {
         echo "
             <form class='editform' action='panelprocess.php' method='post'>
                 <h1 id='formheader'>Editing Question '".$questionID."'</h1>
+                <input class='insertusername' type='hidden' name='username' value=''>
                 <input type='hidden' name='questionid' value='".$questionID."'>
                 <label>Question</label>
                 <input type='text' name='question' value='".$entry["question"]."'>
@@ -187,10 +192,19 @@ if (isset($_POST['creatingnew'])) {
                 <input id='editsubmit' type='submit' value='Save Changes'></input>
             </form>
         ";
+        echo "
+        <script>
+            let elements = document.querySelectorAll('.insertusername');
+            for (let i = 0, item; item = elements[i]; i++) {
+                item.value = String(sessionStorage.getItem('username'));
+            }
+        </script>
+        ";
     } else if ($action == "create") {
         echo "
             <form class='editform' action='panelprocess.php' method='post'>
                 <h1 id='formheader'>Creating New Question</h1>
+                <input class='insertusername' type='hidden' name='username' value=''>
                 <input type='hidden' name='creatingnew' value='YES'>
                 <label>Question ID</label>
                 <input type='text' name='questionid' placeholder='exampleID' value=''>
@@ -209,6 +223,14 @@ if (isset($_POST['creatingnew'])) {
                 <input id='createsubmit' type='submit' value='Create'></input>
             </form>
         ";
+        echo "
+        <script>
+            let elements = document.querySelectorAll('.insertusername');
+            for (let i = 0, item; item = elements[i]; i++) {
+                item.value = String(sessionStorage.getItem('username'));
+            }
+        </script>
+        ";
     } 
 } else if (isset($_POST["toHash"])) {
     $tempPassHash = hash('sha256', $_POST["toHash"]);
@@ -216,7 +238,7 @@ if (isset($_POST['creatingnew'])) {
     $server = mysqli_connect("localhost", "root", "");
     $connection = mysqli_select_db($server, "quiz_db");
     
-    $query = "SELECT passhash FROM `users`";
+    $query = "SELECT * FROM `users`";
     $result = mysqli_query($server, $query);
     if ( !$result ) {
         echo mysqli_error($server);
@@ -226,8 +248,11 @@ if (isset($_POST['creatingnew'])) {
         while ($row = mysqli_fetch_array($result)) {
             $possible = $row["passhash"];
             if (strval($possible) == strval($tempPassHash)) {
-                echo "<script>sessionStorage.setItem('masterhash', '$possible');sessionStorage.setItem('passhash', '$tempPassHash');</script>";
-
+                if ($_POST["userlogin"] == $row["name"]) {
+                    $username = $row["name"];
+                    echo "<script>console.log('abcyzy $username');</script>";
+                    echo "<script>sessionStorage.setItem('username', '$username');sessionStorage.setItem('masterhash', '$possible');sessionStorage.setItem('passhash', '$tempPassHash');</script>";    
+                }
             }
         }
         echo "<script>window.location.href = 'login.html';</script>";
@@ -247,5 +272,12 @@ if (isset($_POST['creatingnew'])) {
     } else if (!ph) {
         window.location.href = "login.html";
     }
+
+    function updateUsernameHiddenValues() {
+        let elements = document.querySelectorAll(".insertusername");
+        for (let i = 0, item; item = elements[i]; i++) {
+            item.value = String(sessionStorage.getItem("username"));
+        }
+    };
 
 </script>
