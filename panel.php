@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>dbPanel</title>
+    <title>Panel</title>
     <link rel="icon" type="image/png" href="public/icon.png">
     <link href="public/style.css" rel="stylesheet"/>
 </head>
@@ -14,6 +14,13 @@
     </div>
     <form id="homecta" action="index.php">
         <button id="homebutton"><img id="iconsvg" src="public/homeIcon.svg"></button>
+    </form>
+    <form id="usercta" action="index.php" method="POST">
+        <input type="hidden" name="resetHash" value="yes">
+        <button type="submit" id="homebutton"><img id="iconsvg" src="public/logoutIcon.svg"></button>
+    </form>
+    <form id="historycta" action="logs/readable.php">
+        <button id="homebutton"><img id="iconsvg" src="public/historyIcon.svg"></button>
     </form>
 
 
@@ -76,3 +83,17 @@
 
 </body>
 </html>
+
+<script>
+
+    let mh = sessionStorage.getItem("masterhash");
+    let ph = sessionStorage.getItem("passhash");
+
+    console.log("hash " + mh);
+    if (ph != mh) {
+        window.location.href = "login.html";
+    } else if (!ph) {
+        window.location.href = "login.html";
+    }
+
+</script>

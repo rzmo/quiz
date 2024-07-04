@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>dbPanel</title>
+    <link rel="icon" type="image/png" href="public/icon.png">
+    <link href="public/style.css" rel="stylesheet"/>
+</head>
+<body>
+    <form id="homecta" action="index.php">
+        <button id="homebutton"><img id="iconsvg" src="public/homeIcon.svg"></button>
+    </form>
+    <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
+        <img id="madeicon" src="public/madeIcon.svg">
+    </a>
+
+    <h2 id='loginlabel' class='question'>Login</h2>
+    <div id="form-container">
+        <form id='passform' action='panelprocess.php' method='POST'>
+            <input id='passinp' type='password' name='toHash'/>
+            <button id='passbtn'><img id="iconsvg" src="public/loginIcon.svg"></button>
+        </form>
+    </div>    
+</body>
+</html>
+<script>
+
+    let mh = sessionStorage.getItem("masterhash");
+    let ph = sessionStorage.getItem("passhash");
+
+    console.log("hash " + mh);
+    if (ph == mh && ph) {
+        window.location.href = "panel.php";
+    }
+
+</script>

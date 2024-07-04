@@ -7,7 +7,7 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
-    <a href="panel.php?">
+    <a href="login.html">
         <img id="wficon" src="public/wfIcon.svg">
     </a>
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
@@ -26,7 +26,7 @@
         <?php
 
         // Number of questions to serve the user. Keep in mind if the URL specifies question quantity, this will be overridden.
-        $numberOfQuestions = 5;
+        $numberOfQuestions = 10;
 
         // Fetch questions from DB
         $server = mysqli_connect("localhost", "root", "");
@@ -231,3 +231,15 @@
     </script>
 </body>
 </html>
+
+<?php
+
+if (isset($_POST["resetHash"])) {
+
+    if ($_POST["resetHash"] == "yes") {
+        echo "<script>console.log('logging out');</script>";
+        echo "<script>sessionStorage.removeItem('masterhash');sessionStorage.removeItem('passhash');</script>";
+    }
+}
+
+?>

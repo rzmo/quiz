@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>dbPanel</title>
+    <title>Panel</title>
     <link rel="icon" type="image/png" href="public/icon.png">
     <link href="public/style.css" rel="stylesheet"/>
 </head>
@@ -13,6 +13,10 @@
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
+    <form id="usercta" action="index.php" method="POST">
+        <input type="hidden" name="resetHash" value="yes">
+        <button type="submit" id="homebutton"><img id="iconsvg" src="public/logoutIcon.svg"></button>
+    </form>
 </body>
 
 
@@ -78,6 +82,13 @@ if (isset($_POST['creatingnew'])) {
     $requestContent[6] = intval($requestContent[6]) - 1;
     $query = "INSERT INTO `questions`(`question`, `questionid`, `option1`, `option2`, `option3`, `option4`, `answer`) VALUES ('$requestContent[0]','$requestContent[1]','$requestContent[2]','$requestContent[3]','$requestContent[4]','$requestContent[5]',$requestContent[6])";
     $result = mysqli_query($server, $query);
+    $querytext = "INSERT INTO \`questions\`(\`question\`, \`questionid\`, \`option1\`, \`option2\`, \`option3\`, \`option4\`, \`answer\`) VALUES (\'$requestContent[0]\',\'$requestContent[1]\',\'$requestContent[2]\',\'$requestContent[3]\',\'$requestContent[4]\',\'$requestContent[5]\',$requestContent[6])";
+    $datetime = strval(date("d/m/Y H:i:s"));
+    $query = "INSERT INTO `querylog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $result = mysqli_query($server, $query);
+    $querytext = "Created question $requestContent[1] - \'$requestContent[0]\', ($requestContent[2]) or ($requestContent[3]) or ($requestContent[4]) or ($requestContent[5]) - Answer is Option $requestContent[6]";
+    $query = "INSERT INTO `readablelog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
     die();
 
@@ -117,6 +128,13 @@ if (isset($_POST['creatingnew'])) {
     $requestContent[6] = intval($requestContent[6]) - 1;
     $query = "UPDATE `questions` SET `question`='$requestContent[0]',`option1`='$requestContent[2]',`option2`='$requestContent[3]',`option3`='$requestContent[4]',`option4`='$requestContent[5]',`answer`=$requestContent[6] WHERE questionid = '$requestContent[1]'";
     $result = mysqli_query($server, $query);
+    $datetime = strval(date("d/m/Y H:i:s"));
+    $querytext = "UPDATE \`questions\` SET \`question\`=\'$requestContent[0]\',\`option1\`=\'$requestContent[2]\',\`option2\`=\'$requestContent[3]\',\`option3\`=\'$requestContent[4]\',\`option4\`=\'$requestContent[5]\',\`answer\`=$requestContent[6] WHERE questionid = \'$requestContent[1]\'";
+    $query = "INSERT INTO `querylog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $result = mysqli_query($server, $query);
+    $querytext = "Edited question $requestContent[1] - \'$requestContent[0]\', ($requestContent[2]) or ($requestContent[3]) or ($requestContent[4]) or ($requestContent[5]) - Answer is Option $requestContent[6]";
+    $query = "INSERT INTO `readablelog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+    $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
     die();
 } else if (isset($_POST['action'])) {
@@ -132,6 +150,13 @@ if (isset($_POST['creatingnew'])) {
     
     if ($action == "delete") {
         $query = "DELETE FROM `questions` WHERE questionid = '$questionID'";
+        $result = mysqli_query($server, $query);
+        $querytext = "DELETE FROM \`questions\` WHERE questionid = \'$questionID\'";
+        $datetime = strval(date("d/m/Y H:i:s"));
+        $query = "INSERT INTO `querylog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
+        $result = mysqli_query($server, $query);
+        $querytext = "Deleted question ".$questionID;
+        $query = "INSERT INTO `readablelog`(`action`, `date`) VALUES ('".strval($querytext)."','".strval($datetime)."')";
         $result = mysqli_query($server, $query);
         echo "<script>location.href = 'panel.php';</script>";
         die();
@@ -184,6 +209,43 @@ if (isset($_POST['creatingnew'])) {
                 <input id='createsubmit' type='submit' value='Create'></input>
             </form>
         ";
+    } 
+} else if (isset($_POST["toHash"])) {
+    $tempPassHash = hash('sha256', $_POST["toHash"]);
+    echo "<script>console.log('".$tempPassHash."')</script>";
+    $server = mysqli_connect("localhost", "root", "");
+    $connection = mysqli_select_db($server, "quiz_db");
+    
+    $query = "SELECT passhash FROM `users`";
+    $result = mysqli_query($server, $query);
+    if ( !$result ) {
+        echo mysqli_error($server);
+        echo "<script>window.location.href = 'index.php';</script>";
+        die;
+    } else {
+        while ($row = mysqli_fetch_array($result)) {
+            $possible = $row["passhash"];
+            if (strval($possible) == strval($tempPassHash)) {
+                echo "<script>sessionStorage.setItem('masterhash', '$possible');sessionStorage.setItem('passhash', '$tempPassHash');</script>";
+
+            }
+        }
+        echo "<script>window.location.href = 'login.html';</script>";
+        exit;
     }
 }
 ?>
+
+<script>
+    
+    let mh = sessionStorage.getItem("masterhash");
+    let ph = sessionStorage.getItem("passhash");
+
+    console.log("hash " + mh);
+    if (ph != mh) {
+        window.location.href = "login.html";
+    } else if (!ph) {
+        window.location.href = "login.html";
+    }
+
+</script>
