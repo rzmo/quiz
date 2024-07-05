@@ -7,8 +7,8 @@
     <link href="../public/style.css" rel="stylesheet"/>
 </head>
 <body>
-    <form id="homecta" action="../panel.php">
-        <button id="homebutton"><img id="iconsvg" src="../public/backIcon.svg"></button>
+    <form id="homecta" action="../index.php">
+        <button id="homebutton"><img id="iconsvg" src="../public/homeIcon.svg"></button>
     </form>
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="../public/madeIcon.svg">
@@ -18,7 +18,10 @@
         <button type="submit" id="homebutton"><img id="iconsvg" src="../public/logoutIcon.svg"></button>
     </form>
     <form id="historycta" action="readable.php">
-        <button id="homebutton"><img id="iconsvg" src="../public/docIcon.svg"></button>
+        <button id="downbutton"><img id="iconsvg" src="../public/docIcon.svg"></button>
+    </form>
+    <form id="historycta" action="../panel.php">
+        <button id="homebutton"><img id="iconsvg" src="../public/backIcon.svg"></button>
     </form>
 
     <div id="dbtablecont">
