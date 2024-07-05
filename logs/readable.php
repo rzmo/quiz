@@ -28,14 +28,16 @@
         <table class="dbtable">
             <tr>
                 <th>Action</th>
+                <th>ID</th>
+                <th>Content</th>
                 <th>User</th>
-                <th>Datetime</th>
+                <th>Date & Time</th>
             </tr>
             <?php
                 $server = mysqli_connect("localhost", "root", "");
                 $connection = mysqli_select_db($server, "quiz_db");
 
-                $query = "SELECT `action`, `user`, `date` FROM `readablelog`";
+                $query = "SELECT `action`, `qid`, `content`, `user`, `date` FROM `readablelog`";
                 $result = mysqli_query($server, $query);
                 if ( !$result ) {
                     echo mysqli_error($server);
@@ -45,6 +47,8 @@
                     {
                         echo "<tr>";
                         echo "<td>". $row["action"] . "</td>";
+                        echo "<td>". $row["qid"] . "</td>";
+                        echo "<td>". $row["content"] . "</td>";
                         echo "<td>". $row["user"] . "</td>";
                         echo "<td>". $row["date"] . "</td>";
                         echo "</tr>";

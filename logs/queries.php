@@ -27,9 +27,9 @@
     <div id="dbtablecont">
         <table class="dbtable">
             <tr>
-                <th>SQL Query Ran</th>
+                <th>SQL Query</th>
                 <th>User</th>
-                <th>Datetime</th>
+                <th>Date & Time</th>
             </tr>
             <?php
                 $server = mysqli_connect("localhost", "root", "");
