@@ -56,6 +56,10 @@
                 }
             ?>
         </table>
+        <form action='readable.php' method='post'>
+            <input type='hidden' name='action' value='wipe'>
+            <button class='wipebutton'><img id="wipeicon" src='../public/deleteIcon.svg'></button>
+        </form>
     </div>
 
 </body>
@@ -75,3 +79,16 @@
     }
 
 </script>
+
+<?php
+if (isset($_POST["action"])) {
+    if ($_POST["action"] == "wipe") {
+        $server = mysqli_connect("localhost", "root", "");
+        $connection = mysqli_select_db($server, "quiz_db");
+
+        $query = "DELETE FROM `readablelog`";
+        $result = mysqli_query($server, $query);
+        echo "<script>window.location.href = 'readable.php';</script>";
+    }
+}
+?>
