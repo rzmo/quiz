@@ -30,6 +30,35 @@
         
         <?php
 
+
+$db_username = "root";
+$db_password = "";
+$host = "localhost";
+$database = "quiz_db";
+
+$server = mysqli_connect($host, $db_username, $db_password);
+$connection = mysqli_select_db($server, $database);
+
+$result = mysqli_query($server, "SHOW TABLES LIKE 'questions';");
+if ($result->num_rows < 1) {
+    echo "<script>console.log('Generating new tables')</script>";
+    
+    $queries = array(
+        "CREATE TABLE `querylog` (`action` text NOT NULL, `user` text NOT NULL, `date` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+        "CREATE TABLE `questions` (`question` text NOT NULL,`questionid` text NOT NULL,`option1` text NOT NULL,`option2` text NOT NULL,`option3` text NOT NULL,`option4` text NOT NULL,`answer` int(11) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+        "CREATE TABLE `readablelog` (`action` text NOT NULL,`qid` text NOT NULL,`content` text NOT NULL,`date` text NOT NULL,`user` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+        "CREATE TABLE `scores` (`name` varchar(20) DEFAULT NULL,`score` int(11) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+        "CREATE TABLE `users` (`name` text NOT NULL,`passhash` text NOT NULL,`salt` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;"
+    );
+
+    foreach ($queries as $sql) {
+        mysqli_query($server, $sql);
+    }
+
+} else {
+    echo "<script>console.log('NOT generating new tables')</script>";
+}
+
         // Number of questions to serve the user. Keep in mind if the URL specifies question quantity, this will be overridden.
         $numberOfQuestions = 10;
 

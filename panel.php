@@ -26,7 +26,8 @@
 
 
     <div id="dbtablecont">
-        <table class="dbtable">
+        <input type="text" id="searchBar" onkeyup="searchFunction()" placeholder="Search by ID...">
+        <table class="dbtable" id="questionTable">
             <tr>
                 <th>ID</th>
                 <th>Question</th>
@@ -60,13 +61,13 @@
                         echo "<td>". $row["option3"] . "</td>";
                         echo "<td>". $row["option4"] . "</td>";
                         echo "<td>". ($row["answer"]+1) . "</td>";
-                        echo "<td style='display: inline-flex;'> 
-                        <form class='actionform' action='panelprocess.php' method='post'>
+                        echo "<td style='flex-grow:3;display: inline-flex;float: left;'> 
+                        <form style='float: left;' class='actionform' action='panelprocess.php' method='post'>
                             <input class='insertusername' type='hidden' name='username' value=''>
                             <input type='hidden' name='action' value='delete,".$row["questionid"]."'>
                             <button class='deletebutton actionbutton'><img src='public/deleteIcon.svg'></button>
                         </form>
-                        <form class='actionform' action='panelprocess.php' method='post'>
+                        <form style='float: left;' class='actionform' action='panelprocess.php' method='post'>
                             <input class='insertusername' type='hidden' name='username' value=''>
                             <input type='hidden' name='action' value='edit,".$row["questionid"]."'>
                             <button class='editbutton actionbutton'><img src='public/editIcon.svg'></button>
@@ -174,5 +175,27 @@
     }, 50); // Adjust the throttle interval (in milliseconds) as needed
 
     document.addEventListener("scroll", throttledScrollHandler);
+
+    function searchFunction() {
+    // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchBar");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("questionTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
 
 </script>
