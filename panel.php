@@ -15,19 +15,20 @@
     <form id="homecta" action="index.php">
         <button id="homebutton"><img id="iconsvg" src="public/homeIcon.svg"></button>
     </form>
+    <form id="historycta" action="logs/readable.php">
+        <button id="homebutton"><img id="iconsvg" src="public/historyIcon.svg"></button>
+    </form>
     <form id="usercta" action="index.php" method="POST">
         <input type="hidden" name="resetHash" value="yes">
         <button type="submit" id="homebutton"><img id="iconsvg" src="public/logoutIcon.svg"></button>
     </form>
-    <form id="historycta" action="logs/readable.php">
-        <button id="homebutton"><img id="iconsvg" src="public/historyIcon.svg"></button>
-    </form>
+    <button id="downbutton" onclick="scrollToBottom()" hidden><img id="iconsvg" src="public/downIcon.svg"></button>
 
 
     <div id="dbtablecont">
         <table class="dbtable">
             <tr>
-                <th>Question ID</th>
+                <th>ID</th>
                 <th>Question</th>
                 <th>Option 1</th>
                 <th>Option 2</th>
@@ -46,6 +47,9 @@
                     echo mysqli_error($server);
                     die;
                 } else {
+
+                    $dbSize = 0;
+
                     while ($row = mysqli_fetch_array($result))
                     {
                         echo "<tr>";
@@ -56,7 +60,7 @@
                         echo "<td>". $row["option3"] . "</td>";
                         echo "<td>". $row["option4"] . "</td>";
                         echo "<td>". ($row["answer"]+1) . "</td>";
-                        echo "<td id='tdid'> 
+                        echo "<td style='display: inline-flex;'> 
                         <form class='actionform' action='panelprocess.php' method='post'>
                             <input class='insertusername' type='hidden' name='username' value=''>
                             <input type='hidden' name='action' value='delete,".$row["questionid"]."'>
@@ -69,15 +73,22 @@
                         </form>
                         </td>";
                         echo "</tr>";
-                        echo "
-                        <script>
-                            let elements = document.querySelectorAll('.insertusername');
-                            for (let i = 0, item; item = elements[i]; i++) {
-                                item.value = String(sessionStorage.getItem('username'));
-                            }
-                        </script>
-                        ";
+                        if (isset($dbSize)) {
+                            $dbSize += 1;
+                            if ($dbSize > 15) {
+                                echo "<script>document.getElementById('downbutton').hidden = false;</script>";
+                                unset($dbSize);
+                            };
+                        }
                     }
+                    echo "
+                    <script>
+                        let elements = document.querySelectorAll('.insertusername');
+                        for (let i = 0, item; item = elements[i]; i++) {
+                            item.value = String(sessionStorage.getItem('username'));
+                        }
+                    </script>
+                    ";
                 }
             ?>
         </table>
@@ -113,5 +124,56 @@
         }
     };
 
+    function scrollToBottom() {
+        const totalHeight = document.documentElement.scrollHeight;
+        const currentPosition = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        const distanceToBottom = totalHeight - (currentPosition + viewportHeight);
+        const proximityThreshold = 100;
+
+        if (currentPosition <= totalHeight / 2) {
+            // If current position is closer to the top half of the page
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        } else {
+            // If current position is closer to the bottom half of the page
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const context = this;
+            const args = arguments;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    const throttledScrollHandler = throttle((event) => {
+        const totalHeight = document.documentElement.scrollHeight;
+        const currentPosition = window.scrollY;
+        const viewportHeight = window.innerHeight;
+
+        let buttonEl = document.getElementById("downbutton");
+        let imageEl = buttonEl.querySelector("#iconsvg");
+
+        if (currentPosition <= totalHeight / 2) {
+            imageEl.src = "public/downIcon.svg";
+        } else {
+            imageEl.src = "public/upIcon.svg";
+        }
+    }, 50); // Adjust the throttle interval (in milliseconds) as needed
+
+    document.addEventListener("scroll", throttledScrollHandler);
 
 </script>

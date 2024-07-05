@@ -7,15 +7,18 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
-    <form id="homecta" action="panel.php">
-        <button id="homebutton"><img id="iconsvg" src="public/backIcon.svg"></button>
-    </form>
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
     <form id="usercta" action="index.php" method="POST">
         <input type="hidden" name="resetHash" value="yes">
         <button type="submit" id="homebutton"><img id="iconsvg" src="public/logoutIcon.svg"></button>
+    </form>
+    <form id="homecta" action="index.php">
+        <button id="homebutton"><img id="iconsvg" src="public/homeIcon.svg"></button>
+    </form>
+    <form id="historycta" action="panel.php">
+        <button id="homebutton"><img id="iconsvg" src="public/backIcon.svg"></button>
     </form>
 </body>
 
@@ -57,7 +60,8 @@ if (isset($_POST['creatingnew'])) {
         $_POST["option4"],
         $_POST["answer"]
     );
-    
+    $username = $_POST["username"];
+
     $placeholderNum = 0;
     while (checkQuestionIDExists('PLACEHOLDER_ID_'.$placeholderNum) == true) {
         $placeholderNum += 1;
@@ -144,7 +148,9 @@ if (isset($_POST['creatingnew'])) {
     //delete info
     
     $requestContent = $_POST["action"];
-    $username = $_POST["username"];
+    if (isset($_POST["username"])){
+        $username = $_POST["username"];
+    }
 
     $action = explode(",", $requestContent)[0];
     $questionID = explode(",", $requestContent)[1];
@@ -178,17 +184,17 @@ if (isset($_POST['creatingnew'])) {
                 <input class='insertusername' type='hidden' name='username' value=''>
                 <input type='hidden' name='questionid' value='".$questionID."'>
                 <label>Question</label>
-                <input type='text' name='question' value='".$entry["question"]."'>
+                <input type='text' name='question' placeholder='What is xyz?' value='".$entry["question"]."' required>
                 <label>Option 1</label>
-                <input type='text' name='option1' value='".$entry["option1"]."'>
+                <input type='text' name='option1' placeholder='Choice One' value='".$entry["option1"]."' required>
                 <label>Option 2</label>
-                <input type='text' name='option2' value='".$entry["option2"]."'>
+                <input type='text' name='option2' placeholder='Choice Two' value='".$entry["option2"]."' required>
                 <label>Option 3</label>
-                <input type='text' name='option3' value='".$entry["option3"]."'>
+                <input type='text' name='option3' placeholder='Choice Three' value='".$entry["option3"]."' required>
                 <label>Option 4</label>
-                <input type='text' name='option4' value='".$entry["option4"]."'>
+                <input type='text' name='option4' placeholder='Choice Four' value='".$entry["option4"]."' required>
                 <label>Answer (Option #)</label>
-                <input type='number' name='answer' min='1' max='4' value='".($entry["answer"]+1)."'>
+                <input type='number' name='answer' min='1' max='4' placeholder='Whatever number the correct option is (1-4)' value='".($entry["answer"]+1)."' required>
                 <input id='editsubmit' type='submit' value='Save Changes'></input>
             </form>
         ";
@@ -207,19 +213,19 @@ if (isset($_POST['creatingnew'])) {
                 <input class='insertusername' type='hidden' name='username' value=''>
                 <input type='hidden' name='creatingnew' value='YES'>
                 <label>Question ID</label>
-                <input type='text' name='questionid' placeholder='exampleID' value=''>
+                <input type='text' name='questionid' placeholder='exampleID' value='' required>
                 <label>Question</label>
-                <input type='text' name='question' placeholder='What is xyz?' value=''>
+                <input type='text' name='question' placeholder='What is xyz?' value='' required>
                 <label>Option 1</label>
-                <input type='text' name='option1' placeholder='Choice One' value=''>
+                <input type='text' name='option1' placeholder='Choice One' value='' required>
                 <label>Option 2</label>
-                <input type='text' name='option2' placeholder='Choice Two' value=''>
+                <input type='text' name='option2' placeholder='Choice Two' value='' required>
                 <label>Option 3</label>
-                <input type='text' name='option3' placeholder='Choice Three' value=''>
+                <input type='text' name='option3' placeholder='Choice Three' value='' required>
                 <label>Option 4</label>
-                <input type='text' name='option4' placeholder='Choice Four' value=''>
+                <input type='text' name='option4' placeholder='Choice Four' value='' required>
                 <label>Answer Index</label>
-                <input type='number' name='answer' min='1' max='4' placeholder='Whatever number the correct option is (1-4)' value=''>
+                <input type='number' name='answer' min='1' max='4' placeholder='Whatever number the correct option is (1-4)' value='' required>
                 <input id='createsubmit' type='submit' value='Create'></input>
             </form>
         ";
@@ -233,31 +239,56 @@ if (isset($_POST['creatingnew'])) {
         ";
     } 
 } else if (isset($_POST["toHash"])) {
-    $tempPassHash = hash('sha256', $_POST["toHash"]);
-    echo "<script>console.log('".$tempPassHash."')</script>";
     $server = mysqli_connect("localhost", "root", "");
     $connection = mysqli_select_db($server, "quiz_db");
     
     $query = "SELECT * FROM `users`";
     $result = mysqli_query($server, $query);
+
     if ( !$result ) {
         echo mysqli_error($server);
         echo "<script>window.location.href = 'index.php';</script>";
         die;
     } else {
         while ($row = mysqli_fetch_array($result)) {
-            $possible = $row["passhash"];
-            if (strval($possible) == strval($tempPassHash)) {
-                if ($_POST["userlogin"] == $row["name"]) {
+            $nameToCheck = $_POST["userlogin"];
+            if (strval($nameToCheck) == strval($row["name"])) {
+                $tempPassHash = hash('sha256', strval($_POST["toHash"] . $row["salt"]));
+                if ($tempPassHash == $row["passhash"]) {
                     $username = $row["name"];
-                    echo "<script>console.log('abcyzy $username');</script>";
-                    echo "<script>sessionStorage.setItem('username', '$username');sessionStorage.setItem('masterhash', '$possible');sessionStorage.setItem('passhash', '$tempPassHash');</script>";    
+                    echo "<script>sessionStorage.setItem('username', '$username');sessionStorage.setItem('masterhash', '$tempPassHash');sessionStorage.setItem('passhash', '$tempPassHash');</script>";    
                 }
             }
         }
         echo "<script>window.location.href = 'login.html';</script>";
         exit;
     }
+} else if (isset($_POST["wantedpass"])) {
+    $tempSalt = generateRandomString();
+
+    $tempPassHash = hash('sha256', strval($_POST["wantedpass"] . $tempSalt));
+    $tempUsername = $_POST["wantedname"];
+
+    $server = mysqli_connect("localhost", "root", "");
+    $connection = mysqli_select_db($server, "quiz_db");
+    
+    $query = "INSERT INTO `users`(`name`, `passhash`, `salt`) VALUES ('$tempUsername','$tempPassHash','$tempSalt')";
+    $result = mysqli_query($server, $query);
+
+    echo "<script>sessionStorage.setItem('username', '$tempUsername');sessionStorage.setItem('masterhash', '$tempPassHash');sessionStorage.setItem('passhash', '$tempPassHash');</script>";    
+
+    echo "<script>window.location.href = 'login.html';</script>";
+
+}
+
+function generateRandomString($length = 20) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[random_int(0, $charactersLength - 1)];
+    }
+    return $randomString;
 }
 ?>
 

@@ -14,13 +14,24 @@
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
 
-    <h2 id='loginlabel' class='question'>Login</h2>
-    <div id="form-container">
+    <h2 style='margin-top: 150px;' class='question loginlabel'>Login</h2>
+    <div class="form-container">
         <form id='passform' action='panelprocess.php' method='POST'>
-            <input id='passinp' type='text' name='userlogin' placeholder="Username" required/>
+            <input id='nameinp' type='text' name='userlogin' placeholder="Username" required/>
             <input id='passinp' type='password' name='toHash' placeholder="Password" required/>
             <button id='passbtn'><img id="iconsvg" src="public/loginIcon.svg"></button>
         </form>
+    </div>    
+    <h2 class='question loginlabel'>Sign Up</h2>
+    <div class="form-container">
+        <form id='passform' action='panelprocess.php' method='POST'>
+            <input id='nameinpA' type='text' name='wantedname' placeholder="Username" required/>
+            <input id='passinpA' type='password' name='wantedpass' placeholder="Password" required/>
+            <button id='passbtnalt'><img id="iconsvg" src="public/loginIcon.svg"></button>
+        </form>
+        <h2 id="validationTextAlt"></h2>
+        <h2 id="validationTextAltPass"></h2>
+
     </div>    
 </body>
 </html>
@@ -34,4 +45,50 @@
         window.location.href = "panel.php";
     }
 
+    let nameInput = document.getElementById("nameinpA");
+    nameInput.addEventListener("input", validateName);
+    let passInput = document.getElementById("passinpA");
+    passInput.addEventListener("input", validatePass);
+
+    function validateName() {
+        let validationText = document.getElementById("validationTextAlt");
+        let submitButton = document.getElementById("passbtnalt")
+        let nameInput = document.getElementById("nameinpA");
+        let name = nameInput.value;
+        if (name == "" || name == " " || name.length == 0) {
+            validationText.innerHTML = "";
+            submitButton.disabled = true;
+        } else if (name.length < 3) {
+            validationText.innerHTML = "Your username cannot be shorter than 3 characters.";
+            submitButton.disabled = true;
+        } else if (name.length > 20) {
+            validationText.innerHTML = "Your username cannot be longer than 20 characters.";
+            submitButton.disabled = true;
+         } else {
+            validationText.innerHTML = "";
+            validatePass();
+        }
+    }
+
+    function validatePass() {
+        let validationText = document.getElementById("validationTextAltPass");
+        let submitButton = document.getElementById("passbtnalt")
+        let passInput = document.getElementById("passinpA");
+        let pass = passInput.value;
+
+        let regexSp = /[!@#$£%^&*()\-+={}[\]:;"'<>,.?\/|\\]/;
+        if (pass == "" || pass == " " || pass.length == 0) {
+            validationText.innerHTML = "";
+            submitButton.disabled = true;
+        } else if (pass.length < 8) {
+            validationText.innerHTML = "Your password cannot be shorter than 8 characters.";
+            submitButton.disabled = true;
+        } else if (!regexSp.test(pass)) {
+            validationText.innerHTML = "Your password needs to contain a symbol";
+            submitButton.disabled = true;
+        } else {
+            validationText.innerHTML = "";
+            submitButton.disabled = false
+        }
+    }
 </script>
