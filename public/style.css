@@ -127,7 +127,7 @@ body {
 
 #tablecont {
     width: 20%;
-    align-content: center;
+    align-content: stretch;
     margin: 0 auto;
     margin-top: 30px;
     justify-content: center;
@@ -333,7 +333,7 @@ tr:hover {background-color: #ddd;}
 
 .actionbutton {
     border: none;
-    display: inline-block;
+    /*display: inline-block;*/
 }
 
 .deletebutton {
@@ -396,6 +396,7 @@ tr:hover {background-color: #ddd;}
     width: calc(100% - 4px);
     height: 40px;
     margin-top: 5px;
+    margin-bottom: 40px;
     left: 0;
     border: none;
 }
@@ -410,11 +411,6 @@ tr:hover {background-color: #ddd;}
 
 .dbtable tr:hover {
     background-color: #eeeeee;
-}
-
-.actionform {
-    width: 40px;
-    height: 40px;
 }
 
 .editform form {
@@ -650,4 +646,28 @@ td, th {
     font-size: 30px;
     padding: 10px;
     margin-right: 30px;
+}
+
+#searchBar {
+    width: 98.7%;
+    height: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    margin-top: 40px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.buttonone {
+    width: 300px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 13px;
+    padding-right: 13px;
+    text-align: left;
+    border: 1px solid #9b9999;
+    width: auto;
+    min-width: 3vw;
 }
