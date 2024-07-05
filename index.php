@@ -7,6 +7,46 @@
     <link href="public/style.css" rel="stylesheet"/>
 </head>
 <body>
+    <button class="difficulty" id="easybtn" onclick="newQuiz('easy', 'N/A')">
+        EASY   
+    </button>
+    <button class="difficulty" id="medbtn" onclick="newQuiz('medium', 'N/A')">
+        MEDIUM   
+    </button>
+    <button class="difficulty" id="hardbtn" onclick="newQuiz('hard', 'N/A')">
+        HARD 
+    </button>
+    <button class="countgr" id="count5" onclick="newQuiz('N/A', '5')">
+        5   
+    </button>
+    <button class="countgr" id="count10" onclick="newQuiz('N/A', '10')">
+        10   
+    </button>
+    <button class="countgr" id="count25" onclick="newQuiz('N/A', '25')">
+        25 
+    </button>
+    <button class="countgr" id="count50" onclick="newQuiz('N/A', '50')">
+        50 
+    </button>
+
+    <script>
+        function newQuiz(inpDifficulty, inpNumber) {
+            let url = 'index.php';
+            if (inpNumber != "N/A") {
+                if ("<?php if (isset($_GET["difficulty"])) {echo ''.$_GET["difficulty"].'';} else {echo 'easy';};?>" == "easy" || "<?php if (isset($_GET["difficulty"])) {echo ''.$_GET["difficulty"].'';} else {echo 'easy';};?>" == "medium" || "<?php if (isset($_GET["difficulty"])) {echo ''.$_GET["difficulty"].'';} else {echo 'easy';};?>" == "hard") {
+                    url = url + '?number=' + inpNumber;
+                    url = url + '&difficulty=' + "<?php if (isset($_GET["difficulty"])) {echo ''.$_GET["difficulty"].'';} else {echo 'easy';};?>";
+                }
+            } else {
+                if (variableNumberOfQuestions) {
+                    url = url + '?difficulty=' + inpDifficulty;
+                    url = url + '&number=' + variableNumberOfQuestions
+                }
+            }
+            window.location.href = url;
+        }
+    </script>
+
     <a href="login.html">
         <img id="wficon" src="public/wfIcon.svg">
     </a>
@@ -45,9 +85,9 @@ if ($result->num_rows < 1) {
     
     $queries = array(
         "CREATE TABLE `querylog` (`action` text NOT NULL, `user` text NOT NULL, `date` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
-        "CREATE TABLE `questions` (`question` text NOT NULL,`questionid` text NOT NULL,`option1` text NOT NULL,`option2` text NOT NULL,`option3` text NOT NULL,`option4` text NOT NULL,`answer` int(11) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+        "CREATE TABLE `questions` (`question` text NOT NULL,`questionid` text NOT NULL,`option1` text NOT NULL,`option2` text NOT NULL,`option3` text NOT NULL,`option4` text NOT NULL,`answer` int(11) NOT NULL,`difficulty` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
         "CREATE TABLE `readablelog` (`action` text NOT NULL,`qid` text NOT NULL,`content` text NOT NULL,`date` text NOT NULL,`user` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
-        "CREATE TABLE `scores` (`name` varchar(20) DEFAULT NULL,`score` int(11) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+        "CREATE TABLE `scores` (`name` varchar(20) DEFAULT NULL,`score` int(11) NOT NULL,`difficulty` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
         "CREATE TABLE `users` (`name` text NOT NULL,`passhash` text NOT NULL,`salt` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;"
     );
 
@@ -62,11 +102,19 @@ if ($result->num_rows < 1) {
         // Number of questions to serve the user. Keep in mind if the URL specifies question quantity, this will be overridden.
         $numberOfQuestions = 10;
 
+        // URL QUESTION DIFFICULTY SETTING
+        if (isset($_GET['difficulty'])) {
+            $questionDifficulty = $_GET['difficulty'];
+            $query = "SELECT `question`, `questionid`, `option1`, `option2`, `option3`, `option4` FROM `questions` WHERE difficulty = '$questionDifficulty'";
+            echo "<script>addEventListener('DOMContentLoaded', (event) => {document.getElementById('difficultyinput').value = '$questionDifficulty';});</script>";
+        } else {
+            $query = "SELECT `question`, `questionid`, `option1`, `option2`, `option3`, `option4` FROM `questions`";
+        }
+
         // Fetch questions from DB
         $server = mysqli_connect("localhost", "root", "");
         $connection = mysqli_select_db($server, "quiz_db");
 
-        $query = "SELECT `question`, `questionid`, `option1`, `option2`, `option3`, `option4` FROM `questions`";
         $result = mysqli_query($server, $query);
 
         $questionArr = array();
@@ -80,7 +128,7 @@ if ($result->num_rows < 1) {
                     $row['option3'],
                     $row['option4'],
                 ),
-                'identifier' => $row['questionid'],
+                'identifier' => $row['questionid']
             );
     
             // Add question to the main array
@@ -102,9 +150,11 @@ if ($result->num_rows < 1) {
 
         echo "<script>let answerdict = " . $answerdict_json . ";</script>";
 
+        // URL QUESTION NUMBER SETTING
         if (isset($_GET['number'])) {
             $numberOfQuestions = $_GET['number'];
             echo "<script>console.log('Number of Qs => $numberOfQuestions - pulled from URL')</script>";
+            echo "<script>let variableNumberOfQuestions = $numberOfQuestions;</script>";
         } else {
             echo "<script>console.log('Number of Qs => $numberOfQuestions - default value defined in PHP')</script>";
         }
@@ -113,6 +163,9 @@ if ($result->num_rows < 1) {
             $numberOfQuestions = sizeof($questionArr);
             echo "<script>console.log('Number of Qs => $numberOfQuestions - limited by maximum count')</script>";
         }
+
+
+
 
         echo "<script>const numberOfQuestions = $numberOfQuestions;</script>";
 
@@ -159,7 +212,8 @@ if ($result->num_rows < 1) {
         <h2 class='question'>Enter your name to save your results.</h2>
         <form action="leaderboard.php" method="POST">
                 <input id="nameinput" type="text" name="name">
-                <input id="scoreinput" type="hidden" name="score" value="0"/>
+                <input id="scoreinput" type="hidden" name="score" value="0">
+                <input id="difficultyinput" type="hidden" name="difficulty" value="">
                 <button id="submitbutton" disabled>Submit</button>
         </form>
         <h2 id="validationText">Please enter your name.</h2>

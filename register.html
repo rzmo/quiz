@@ -13,26 +13,28 @@
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
+    <form id="usercta" action="index.php" method="POST">
+        <input type="hidden" name="resetHash" value="yes">
+        <button type="submit" id="homebutton"><img id="iconsvg" src="public/logoutIcon.svg"></button>
+    </form>
+    <form id="historycta" action="panel.php">
+        <button id="homebutton"><img id="iconsvg" src="public/backIcon.svg"></button>
+    </form>
 
-    <h2 style='margin-top: 240px;' class='question loginlabel'>Login</h2>
+    <h2 style='margin-top: 240px;' class='question loginlabel'>Sign Up</h2>
     <div class="form-container">
         <form id='passform' action='panelprocess.php' method='POST'>
-            <input id='nameinp' type='text' name='userlogin' placeholder="Username" required/>
-            <input id='passinp' type='password' name='toHash' placeholder="Password" required/>
-            <button id='passbtn'><img id="iconsvg" src="public/loginIcon.svg"></button>
+            <input id='nameinpA' type='text' name='wantednameo' placeholder="Username" required/>
+            <input id='passinpA' type='password' name='wantedpasso' placeholder="Password" required/>
+            <button id='passbtnalt'><img id="iconsvg" src="public/loginIcon.svg"></button>
         </form>
-    </div>   
+        <h2 id="validationTextAlt"></h2>
+        <h2 id="validationTextAltPass"></h2>
+
+    </div>    
 </body>
 </html>
 <script>
-
-    let mh = sessionStorage.getItem("masterhash");
-    let ph = sessionStorage.getItem("passhash");
-
-    console.log("hash " + mh);
-    if (ph == mh && ph) {
-        window.location.href = "panel.php";
-    }
 
     let nameInput = document.getElementById("nameinpA");
     nameInput.addEventListener("input", validateName);
@@ -80,4 +82,22 @@
             submitButton.disabled = false
         }
     }
+    
+    /*let mh = sessionStorage.getItem("masterhash");
+    let ph = sessionStorage.getItem("passhash");
+
+    console.log("hash " + mh);
+    if (ph != mh) {
+        window.location.href = "login.html";
+    } else if (!ph) {
+        window.location.href = "login.html";
+    }
+
+    function updateUsernameHiddenValues() {
+        let elements = document.querySelectorAll(".insertusername");
+        for (let i = 0, item; item = elements[i]; i++) {
+            item.value = String(sessionStorage.getItem("username"));
+        }
+    };*/
+
 </script>

@@ -33,9 +33,11 @@
         }
         ?>
         <div id="tablecont">
-        <table>
+        <input type="text" id="searchBar2" onkeyup="searchFunction()" placeholder="Search by difficulty...">
+        <table id="leaderboardTable">
             <tr>
                 <th>Name</th>
+                <th>Difficulty</th>
                 <th>Score</th>
             </tr>
             <?php
@@ -43,6 +45,11 @@
                 if (isset($_POST['name']) and $_POST['name'] != "") {
                     echo "<tr>";
                     echo "<td>". $_POST["name"] . "</td>";
+                    if (isset($_POST['difficulty']) and ($_POST['difficulty'] != "")) {
+                        echo "<td>". ucfirst($_POST["difficulty"]) . "</td>";
+                    } else {
+                        echo "<td>N/A</td>";
+                    }
                     echo "<td>". $_POST["score"] . "</td>";
                     echo "</tr>";
                 }
@@ -62,6 +69,11 @@
                         $tempcount += 1;
                         echo "<tr>";
                         echo "<td>". $row["name"] . "</td>";
+                        if (isset($row['difficulty']) and ($row['difficulty'] != "")) {
+                            echo "<td>". ucfirst($row["difficulty"]) . "</td>";
+                        } else {
+                            echo "<td>N/A</td>";
+                        }
                         echo "<td>". $row["score"] . "</td>";
                         echo "</tr>";
                     }
@@ -109,6 +121,7 @@
 if (isset($_POST['name']) and $_POST['name'] != "") {
     $name = $_POST["name"];
     $score = $_POST["score"];
+    $difficulty = $_POST["difficulty"];
 
     $db_username = "root";
     $db_password = "";
@@ -125,7 +138,7 @@ if (isset($_POST['name']) and $_POST['name'] != "") {
       die("Connection failed: " . mysqli_connect_error());
     }
 
-    $sql = "INSERT INTO `scores` (`name`, `score`) VALUES ('$name', '$score');";
+    $sql = "INSERT INTO `scores` (`name`, `score`, `difficulty`) VALUES ('$name', '$score', '$difficulty');";
 
     if (!mysqli_query($server, $sql)) {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
@@ -187,4 +200,27 @@ mysqli_close($server);
     }, 50); // Adjust the throttle interval (in milliseconds) as needed
 
     document.addEventListener("scroll", throttledScrollHandler);
+
+    function searchFunction() {
+    // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchBar2");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("leaderboardTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
 </script>

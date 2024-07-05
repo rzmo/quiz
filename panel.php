@@ -10,6 +10,9 @@
     <a href="https://docs.google.com/document/d/1AUrHIvbGsYO7f4EYAtMFNuGt9jjg0Bvz6orIihyAkIc/edit?usp=sharing" target="_blank">
         <img id="madeicon" src="public/madeIcon.svg">
     </a>
+    <form id="registercta" action="register.html">
+        <button id="registerbutton"><img id="iconsvg" src="public/registerIcon.svg"></button>
+    </form>
     <div id="headerbar">
     </div>
     <form id="homecta" action="index.php">
@@ -36,13 +39,14 @@
                 <th>Option 3</th>
                 <th>Option 4</th>
                 <th>Answer</th>
+                <th>Difficulty</th>
                 <th>Actions</th>
             </tr>
             <?php
                 $server = mysqli_connect("localhost", "root", "");
                 $connection = mysqli_select_db($server, "quiz_db");
 
-                $query = "SELECT `question`, `questionid`, `option1`, `option2`, `option3`, `option4`, `answer` FROM `questions`";
+                $query = "SELECT `question`, `questionid`, `option1`, `option2`, `option3`, `option4`, `answer`, `difficulty` FROM `questions`";
                 $result = mysqli_query($server, $query);
                 if ( !$result ) {
                     echo mysqli_error($server);
@@ -61,6 +65,11 @@
                         echo "<td>". $row["option3"] . "</td>";
                         echo "<td>". $row["option4"] . "</td>";
                         echo "<td>". ($row["answer"]+1) . "</td>";
+                        if ($row["difficulty"] == "" or $row["difficulty"] == " ") {
+                            echo "<td>Unset</td>";
+                        } else if (isset($row["difficulty"])) {
+                            echo "<td>". ucfirst($row["difficulty"]) . "</td>";
+                        }
                         echo "<td style='flex-grow:3;display: inline-flex;float: left;'> 
                         <form style='float: left;' class='actionform' action='panelprocess.php' method='post'>
                             <input class='insertusername' type='hidden' name='username' value=''>

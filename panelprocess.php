@@ -58,10 +58,14 @@ if (isset($_POST['creatingnew'])) {
         $_POST["option2"],
         $_POST["option3"],
         $_POST["option4"],
-        $_POST["answer"]
+        $_POST["answer"],
+        $_POST["difficulty"]
     );
     $username = $_POST["username"];
 
+    if (!isset($requestContent[7])) {
+        $requestContent[7] = "";
+    }
     $placeholderNum = 0;
     while (checkQuestionIDExists('PLACEHOLDER_ID_'.$placeholderNum) == true) {
         $placeholderNum += 1;
@@ -84,16 +88,16 @@ if (isset($_POST['creatingnew'])) {
     $connection = mysqli_select_db($server, "quiz_db");
 
     $requestContent[6] = intval($requestContent[6]) - 1;
-    $query = "INSERT INTO `questions`(`question`, `questionid`, `option1`, `option2`, `option3`, `option4`, `answer`) VALUES ('$requestContent[0]','$requestContent[1]','$requestContent[2]','$requestContent[3]','$requestContent[4]','$requestContent[5]',$requestContent[6])";
+    $query = "INSERT INTO `questions`(`question`, `questionid`, `option1`, `option2`, `option3`, `option4`, `answer`, `difficulty`) VALUES ('$requestContent[0]','$requestContent[1]','$requestContent[2]','$requestContent[3]','$requestContent[4]','$requestContent[5]',$requestContent[6],'$requestContent[7]')";
     $result = mysqli_query($server, $query);
-    $querytext = "INSERT INTO \`questions\`(\`question\`, \`questionid\`, \`option1\`, \`option2\`, \`option3\`, \`option4\`, \`answer\`) VALUES (\'$requestContent[0]\',\'$requestContent[1]\',\'$requestContent[2]\',\'$requestContent[3]\',\'$requestContent[4]\',\'$requestContent[5]\',$requestContent[6])";
+    $querytext = "INSERT INTO \`questions\`(\`question\`, \`questionid\`, \`option1\`, \`option2\`, \`option3\`, \`option4\`, \`answer\`, \`difficulty\`) VALUES (\'$requestContent[0]\',\'$requestContent[1]\',\'$requestContent[2]\',\'$requestContent[3]\',\'$requestContent[4]\',\'$requestContent[5]\',$requestContent[6],\'$requestContent[7]\')";
     $datetime = strval(date("d/m/Y H:i:s"));
     $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     $requestContent[6] += 1; 
     $answerIndex = $requestContent[6] + 1;
     $answerContent = $requestContent[$answerIndex];
-    $querytext = "Question: <b>$requestContent[0]</b> <br>Options: <b>$requestContent[2]</b>, <b>$requestContent[3]</b>, <b>$requestContent[4]</b>, <b>$requestContent[5]</b> <br>Answer: <b>$answerContent</b> (Option $requestContent[6])";
+    $querytext = "Question: <b>$requestContent[0]</b> <br>Options: <b>$requestContent[2]</b>, <b>$requestContent[3]</b>, <b>$requestContent[4]</b>, <b>$requestContent[5]</b> <br>Answer: <b>$answerContent</b> (Option $requestContent[6]) <br>Difficulty: <b>$requestContent[7]</b>";
     $query = "INSERT INTO `readablelog`(`action`, `qid`, `content`, `user`, `date`) VALUES ('CREATE', '$requestContent[1]', '".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
@@ -108,10 +112,14 @@ if (isset($_POST['creatingnew'])) {
         $_POST["option2"],
         $_POST["option3"],
         $_POST["option4"],
-        $_POST["answer"]
+        $_POST["answer"],
+        $_POST["difficulty"]
     );
     $username = $_POST["username"];
 
+    if (!isset($requestContent[7])) {
+        $requestContent[7] = "";
+    }
     $placeholderNum = 0;
     while (checkQuestionIDExists('PLACEHOLDER_ID_'.$placeholderNum) == true) {
         $placeholderNum += 1;
@@ -134,16 +142,16 @@ if (isset($_POST['creatingnew'])) {
     $connection = mysqli_select_db($server, "quiz_db");
 
     $requestContent[6] = intval($requestContent[6]) - 1;
-    $query = "UPDATE `questions` SET `question`='$requestContent[0]',`option1`='$requestContent[2]',`option2`='$requestContent[3]',`option3`='$requestContent[4]',`option4`='$requestContent[5]',`answer`=$requestContent[6] WHERE questionid = '$requestContent[1]'";
+    $query = "UPDATE `questions` SET `question`='$requestContent[0]',`option1`='$requestContent[2]',`option2`='$requestContent[3]',`option3`='$requestContent[4]',`option4`='$requestContent[5]',`answer`=$requestContent[6],`difficulty`='$requestContent[7]' WHERE questionid = '$requestContent[1]'";
     $result = mysqli_query($server, $query);
     $datetime = strval(date("d/m/Y H:i:s"));
-    $querytext = "UPDATE \`questions\` SET \`question\`=\'$requestContent[0]\',\`option1\`=\'$requestContent[2]\',\`option2\`=\'$requestContent[3]\',\`option3\`=\'$requestContent[4]\',\`option4\`=\'$requestContent[5]\',\`answer\`=$requestContent[6] WHERE questionid = \'$requestContent[1]\'";
+    $querytext = "UPDATE \`questions\` SET \`question\`=\'$requestContent[0]\',\`option1\`=\'$requestContent[2]\',\`option2\`=\'$requestContent[3]\',\`option3\`=\'$requestContent[4]\',\`option4\`=\'$requestContent[5]\',\`answer\`=$requestContent[6],\`difficulty\`=\'$requestContent[7]\' WHERE questionid = \'$requestContent[1]\'";
     $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     $requestContent[6] += 1; 
     $answerIndex = $requestContent[6] + 1;
     $answerContent = $requestContent[$answerIndex];
-    $querytext = "Question: <b>$requestContent[0]</b> <br>Options: <b>$requestContent[2]</b>, <b>$requestContent[3]</b>, <b>$requestContent[4]</b>, <b>$requestContent[5]</b> <br>Answer: <b>$answerContent</b> (Option $requestContent[6])";
+    $querytext = "Question: <b>$requestContent[0]</b> <br>Options: <b>$requestContent[2]</b>, <b>$requestContent[3]</b>, <b>$requestContent[4]</b>, <b>$requestContent[5]</b> <br>Answer: <b>$answerContent</b> (Option $requestContent[6]) <br>Difficulty: <b>$requestContent[7]</b>";
     $query = "INSERT INTO `readablelog`(`action`, `qid`, `content`, `user`, `date`) VALUES ('EDIT', '$requestContent[1]', '".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
@@ -178,7 +186,7 @@ if (isset($_POST['creatingnew'])) {
         $server = mysqli_connect("localhost", "root", "");
         $connection = mysqli_select_db($server, "quiz_db");
 
-        $query = "SELECT `question`, `option1`, `option2`, `option3`, `option4`, `answer` FROM `questions` WHERE questionid = '$questionID'";
+        $query = "SELECT `question`, `option1`, `option2`, `option3`, `option4`, `answer`, `difficulty` FROM `questions` WHERE questionid = '$questionID'";
         $result = mysqli_query($server, $query);
 
         $entry = mysqli_fetch_array($result);
@@ -199,6 +207,8 @@ if (isset($_POST['creatingnew'])) {
                 <input type='text' name='option4' placeholder='Choice Four' value='".$entry["option4"]."' required>
                 <label>Answer (Option #)</label>
                 <input type='number' name='answer' min='1' max='4' placeholder='Whatever number the correct option is (1-4)' value='".($entry["answer"]+1)."' required>
+                <label>Difficulty</label>
+                <input type='text' name='difficulty' placeholder='Leave blank to not classify' value='".($entry["difficulty"])."'>
                 <input id='editsubmit' type='submit' value='Save Changes'></input>
             </form>
         ";
@@ -230,6 +240,8 @@ if (isset($_POST['creatingnew'])) {
                 <input type='text' name='option4' placeholder='Choice Four' value='' required>
                 <label>Answer Index</label>
                 <input type='number' name='answer' min='1' max='4' placeholder='Whatever number the correct option is (1-4)' value='' required>
+                <label>Difficulty</label>
+                <input type='text' name='difficulty' placeholder='Leave blank to not classify' value=''>
                 <input id='createsubmit' type='submit' value='Create'></input>
             </form>
         ";
@@ -282,6 +294,20 @@ if (isset($_POST['creatingnew'])) {
     echo "<script>sessionStorage.setItem('username', '$tempUsername');sessionStorage.setItem('masterhash', '$tempPassHash');sessionStorage.setItem('passhash', '$tempPassHash');</script>";    
 
     echo "<script>window.location.href = 'login.html';</script>";
+
+} else if (isset($_POST["wantedpasso"])) {
+    $tempSalt = generateRandomString();
+
+    $tempPassHash = hash('sha256', strval($_POST["wantedpasso"] . $tempSalt));
+    $tempUsername = $_POST["wantednameo"];
+
+    $server = mysqli_connect("localhost", "root", "");
+    $connection = mysqli_select_db($server, "quiz_db");
+    
+    $query = "INSERT INTO `users`(`name`, `passhash`, `salt`) VALUES ('$tempUsername','$tempPassHash','$tempSalt')";
+    $result = mysqli_query($server, $query);
+
+    echo "<script>window.location.href = 'panel.php';</script>";
 
 }
 
