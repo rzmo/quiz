@@ -22,6 +22,7 @@
         <button class="iconbutton"><img id="iconsvg" src="public/backIcon.svg"></button>
     </form>
     <button id="themebutton" onclick="darkMode()"><img id="iconsvg" src="public/moonIcon.svg"></button>
+    <button id="downbutton" onclick="scrollToBottom()" hidden><img id="iconsvg" src="public/downIcon.svg"></button>
     <div class="maincontainer">
 
         <h1 id="header">General Knowledge Quiz - Past Results</h1>
@@ -63,10 +64,9 @@
                         echo "<td>". $row["name"] . "</td>";
                         echo "<td>". $row["score"] . "</td>";
                         echo "</tr>";
-                        // ONLY DISPLAY FIRST 5 RESULTS (Not relevant to score, just order submitted.)
-                        /*if ($tempcount > 5) {
-                            die;
-                        }*/
+                    }
+                    if ($tempcount > 60) {
+                        echo "<script>document.getElementById('downbutton').hidden = false;</script>";
                     }
                 }
 
@@ -135,3 +135,56 @@ if (isset($_POST['name']) and $_POST['name'] != "") {
 mysqli_close($server);
 
 ?>
+
+<script>
+    function scrollToBottom() {
+        const totalHeight = document.documentElement.scrollHeight;
+        const currentPosition = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        const distanceToBottom = totalHeight - (currentPosition + viewportHeight);
+
+        if (currentPosition <= totalHeight / 2) {
+            // If current position is closer to the top half of the page
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        } else {
+            // If current position is closer to the bottom half of the page
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const context = this;
+            const args = arguments;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    const throttledScrollHandler = throttle((event) => {
+        const totalHeight = document.documentElement.scrollHeight;
+        const currentPosition = window.scrollY;
+        const viewportHeight = window.innerHeight;
+
+        let buttonEl = document.getElementById("downbutton");
+        let imageEl = buttonEl.querySelector("#iconsvg");
+
+        if (currentPosition <= totalHeight / 2) {
+            imageEl.src = "public/downIcon.svg";
+        } else {
+            imageEl.src = "public/upIcon.svg";
+        }
+    }, 50); // Adjust the throttle interval (in milliseconds) as needed
+
+    document.addEventListener("scroll", throttledScrollHandler);
+</script>

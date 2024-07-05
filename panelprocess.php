@@ -91,12 +91,14 @@ if (isset($_POST['creatingnew'])) {
     $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     $requestContent[6] += 1; 
-    $querytext = "Created question $requestContent[1] - \'$requestContent[0]\', ($requestContent[2]) or ($requestContent[3]) or ($requestContent[4]) or ($requestContent[5]) - Answer is Option $requestContent[6]";
-    $query = "INSERT INTO `readablelog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
+    $answerIndex = $requestContent[6] + 1;
+    $answerContent = $requestContent[$answerIndex];
+    $querytext = "Question: <b>$requestContent[0]</b> <br>Options: <b>$requestContent[2]</b>, <b>$requestContent[3]</b>, <b>$requestContent[4]</b>, <b>$requestContent[5]</b> <br>Answer: <b>$answerContent</b> (Option $requestContent[6])";
+    $query = "INSERT INTO `readablelog`(`action`, `qid`, `content`, `user`, `date`) VALUES ('CREATE', '$requestContent[1]', '".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
     die();
-
+//    $query = "INSERT INTO `readablelog`(`action`, `qid`, `content`, `user`, `date`) VALUES ('CREATE', '$requestContent[1]', '".strval($querytext)."', '".$username."','".strval($datetime)."')";
 } else if (isset($_POST['questionid'])) {
     //edit info
     $requestContent = array(
@@ -139,8 +141,10 @@ if (isset($_POST['creatingnew'])) {
     $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     $requestContent[6] += 1; 
-    $querytext = "Edited question $requestContent[1] - \'$requestContent[0]\', ($requestContent[2]) or ($requestContent[3]) or ($requestContent[4]) or ($requestContent[5]) - Answer is Option $requestContent[6]";
-    $query = "INSERT INTO `readablelog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."', '".strval($datetime)."')";
+    $answerIndex = $requestContent[6] + 1;
+    $answerContent = $requestContent[$answerIndex];
+    $querytext = "Question: <b>$requestContent[0]</b> <br>Options: <b>$requestContent[2]</b>, <b>$requestContent[3]</b>, <b>$requestContent[4]</b>, <b>$requestContent[5]</b> <br>Answer: <b>$answerContent</b> (Option $requestContent[6])";
+    $query = "INSERT INTO `readablelog`(`action`, `qid`, `content`, `user`, `date`) VALUES ('EDIT', '$requestContent[1]', '".strval($querytext)."', '".$username."','".strval($datetime)."')";
     $result = mysqli_query($server, $query);
     echo "<script>location.href = 'panel.php';</script>";
     die();
@@ -165,8 +169,8 @@ if (isset($_POST['creatingnew'])) {
         $datetime = strval(date("d/m/Y H:i:s"));
         $query = "INSERT INTO `querylog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."', '".$username."','".strval($datetime)."')";
         $result = mysqli_query($server, $query);
-        $querytext = "Deleted question ".$questionID;
-        $query = "INSERT INTO `readablelog`(`action`, `user`, `date`) VALUES ('".strval($querytext)."','".$username."','".strval($datetime)."')";
+        $querytext = "N/A";
+        $query = "INSERT INTO `readablelog`(`action`, `qid`, `content`, `user`, `date`) VALUES ('DELETE', '$questionID', '".strval($querytext)."', '".$username."','".strval($datetime)."')";
         $result = mysqli_query($server, $query);
         echo "<script>location.href = 'panel.php';</script>";
         die();

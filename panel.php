@@ -129,7 +129,6 @@
         const currentPosition = window.scrollY;
         const viewportHeight = window.innerHeight;
         const distanceToBottom = totalHeight - (currentPosition + viewportHeight);
-        const proximityThreshold = 100;
 
         if (currentPosition <= totalHeight / 2) {
             // If current position is closer to the top half of the page
