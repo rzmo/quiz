@@ -373,10 +373,28 @@ tr:hover {background-color: #ddd;}
     width: 100%;
 }
 
+.wipebutton {
+    background-color: #db3535;
+    width: calc(100% - 4px);
+    height: 40px;
+    margin-top: 5px;
+    left: 0;
+    border: none;
+}
+
+.wipebutton:hover {
+    background-color: #c22e2e;
+}
+
+.wipebutton:active {
+    background-color: #a52828;
+}
+
+
 .addbutton {
     background-color: #5faf58;
     width: calc(100% - 4px);
-    height: 50px;
+    height: 40px;
     margin-top: 5px;
     left: 0;
     border: none;
@@ -388,11 +406,6 @@ tr:hover {background-color: #ddd;}
 
 .addbutton:active {
     background-color: #335f2f;
-}
-
-#addicon {
-    width: 40px;
-    height: 40px;
 }
 
 .dbtable tr:hover {
